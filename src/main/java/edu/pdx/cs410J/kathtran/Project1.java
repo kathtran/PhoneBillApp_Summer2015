@@ -24,11 +24,6 @@ public class Project1 {
      * @param args options or arguments for the phone bill, or any combination of both.
      */
     public static void main(String[] args) {
-        Class c = AbstractPhoneBill.class;  // Refer to one of Dave's classes so that we can be sure it is on the classpath
-        if (c == null) {
-            System.err.println("Classpath is incomplete");
-            System.exit(1);
-        }
 
         if (args.length < 1) {
             System.err.println("Missing command line arguments");
@@ -44,9 +39,9 @@ public class Project1 {
 
         boolean printCall = false;
         int index = 0;
-        if (args[index].equals("-print")) {
-            printCall = true;
-            index += 1;
+        if (args[index].equals("-print")) {     // The only time that a call will be printed will
+            printCall = true;                   // be when the `-print` option is specified as the
+            index += 1;                         // very first argument in the array of arguments.
         }
 
         PhoneBill phoneBill;
@@ -58,9 +53,9 @@ public class Project1 {
             System.exit(1);
         }
 
-        String callerNumber = null;
-        String calleeNumber = null;
-        String startTime = null;
+        String callerNumber = null;     // Temporary Strings used to
+        String calleeNumber = null;     // hold each requirement of
+        String startTime = null;        // the phone call record.
         String endTime = null;
         if (args[index] != null && project1.isValidPhoneNumber(args[index]) == true) {
             callerNumber = args[index];
@@ -159,10 +154,37 @@ public class Project1 {
         String[] timeCheck = timeInput.split(":");
         int hour = Integer.parseInt(timeCheck[0]);
         int minute = Integer.parseInt(timeCheck[0]);
-        return (dateToBeChecked.matches() && (month >= 1 && month <= 12) &&
-                (day >= 1 && day <= 31) && (year >= 1900 && year <= 2015) &&
+        if (checkDateValidity(month, day, year) == false) {
+            System.err.println("Invalid date");
+            System.exit(1);
+        }
+        return (dateToBeChecked.matches() && (year >= 1900 && year <= 2015) &&
                 timeToBeChecked.matches() && (hour >= 0 && hour <= 23) &&
                 (minute >= 0 && minute <= 59));
+    }
+
+    /**
+     * Determines the validity of some given date.
+     *
+     * @param month the <code>int</code> that correlates to some month of the year.
+     * @param day the <code>int</code> that correlates to some day of the month.
+     * @param year the <code>int</code> that correlates to some year.
+     * @return <code>true</code> if the day is valid within the month, otherwise <code>false</code>.
+     */
+    public boolean checkDateValidity(int month, int day, int year) {
+        if (month == 2 && day <= 28)
+            return true;
+        if (month == 2 && day == 29 && (year%4 == 0 && year%100 != 0))
+            return true;
+        if (month == 9 || month == 4 || month == 6 || month == 11) {
+            if (day <= 30)
+                return true;
+        }
+        if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
+            if (day <= 31)
+                return true;
+        }
+        return false;
     }
 
     /**

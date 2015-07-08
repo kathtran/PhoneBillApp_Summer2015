@@ -52,7 +52,7 @@ public class PhoneBill extends AbstractPhoneBill {
     }
 
     /**
-     * Returns the name of the customer whose phone bill this is.
+     * @return the name of the customer whose phone bill this is.
      */
     @Override
     public String getCustomer() {
@@ -72,7 +72,7 @@ public class PhoneBill extends AbstractPhoneBill {
     }
 
     /**
-     * Returns all of the phone calls (as instances of {@link
+     * @return all of the phone calls (as instances of {@link
      * AbstractPhoneCall}) in this phone bill.
      */
     @Override

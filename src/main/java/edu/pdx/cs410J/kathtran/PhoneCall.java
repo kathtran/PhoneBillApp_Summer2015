@@ -59,7 +59,7 @@ public class PhoneCall extends AbstractPhoneCall {
     }
 
     /**
-     * Returns the phone number of the person who originated this phone call.
+     * @return the phone number of the person who originated this phone call.
      */
     @Override
     public String getCaller() {
@@ -67,7 +67,7 @@ public class PhoneCall extends AbstractPhoneCall {
     }
 
     /**
-     * Returns the phone number of the person who received this phone call.
+     * @return the phone number of the person who received this phone call.
      */
     @Override
     public String getCallee() {
@@ -75,20 +75,20 @@ public class PhoneCall extends AbstractPhoneCall {
     }
 
     /**
-     * Returns a textual representation of the time that this phone call
+     * @return a textual representation of the time that this phone call
      * was originated.
      */
     @Override
     public String getStartTimeString() {
-        return startTime;
+        return this.startTime;
     }
 
     /**
-     * Returns a textual representation of the time that this phone call
+     * @return a textual representation of the time that this phone call
      * was completed.
      */
     @Override
     public String getEndTimeString() {
-        return endTime;
+        return this.endTime;
     }
 }
