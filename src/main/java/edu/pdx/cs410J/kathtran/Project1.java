@@ -1,7 +1,5 @@
 package edu.pdx.cs410J.kathtran;
 
-import edu.pdx.cs410J.AbstractPhoneBill;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,7 +38,7 @@ public class Project1 {
                 index += 1;                         // very first argument in the array of arguments.
             }
 
-            PhoneBill phoneBill;
+            PhoneBill phoneBill = null;
             if (args[index] != null && args[index].length() > 1) {
                 phoneBill = new PhoneBill(project1.correctNameCasing(args[index]));
                 index += 1;
@@ -53,14 +51,14 @@ public class Project1 {
             String calleeNumber = null;     // hold each requirement of
             String startTime = null;        // the phone call record.
             String endTime = null;
-            if (args[index] != null && project1.isValidPhoneNumber(args[index]) == true) {
+            if (args[index] != null && project1.isValidPhoneNumber(args[index])) {
                 callerNumber = args[index];
                 index += 1;
             } else {
                 System.err.println("Missing caller number");
                 System.exit(1);
             }
-            if (args[index] != null && project1.isValidPhoneNumber(args[index]) == true) {
+            if (args[index] != null && project1.isValidPhoneNumber(args[index])) {
                 calleeNumber = args[index];
                 index += 1;
             } else {
@@ -78,22 +76,23 @@ public class Project1 {
             if (args[index] != null && args[index + 1] != null && project1.isValidTime(args[index], args[index + 1])) {
                 endTime = args[index];
                 endTime = endTime.concat(" " + args[index + 1]);
-                index += 2;
+//                index += 2;
             } else {
                 System.err.print("Missing end time");
                 System.exit(1);
             }
 
             PhoneCall phoneCall = null;
-            if (callerNumber != null && calleeNumber != null && startTime != null && endTime != null)
+            if (callerNumber != null && calleeNumber != null && startTime != null && endTime != null) {
                 phoneCall = new PhoneCall(callerNumber, calleeNumber, startTime, endTime);
-            else {
+                phoneBill.addPhoneCall(phoneCall);
+            } else {
                 System.err.println("Insufficient arguments for the call record");
                 System.exit(1);
             }
 
-            if (printCall == true) {
-                System.out.println(phoneCall.toString());
+            if (printCall) {
+                System.out.println(phoneBill.getMostRecentPhoneCall(phoneCall).toString());
             }
 
         } catch (ArrayIndexOutOfBoundsException ex) {
@@ -145,7 +144,7 @@ public class Project1 {
      * @param dateInput the month, day, and year, as a <code>String</code>.
      * @param timeInput the hour and minutes, as a <code>String</code>.
      * @return <code>True</code> if the form is valid, otherwise <code>false</code>.
-     * @throws <code>NumberFormatException</code> when argument cannot be parsed into an <code>Integer</code>.
+     * @throws NumberFormatException when argument cannot be parsed into an <code>Integer</code>.
      */
     public boolean isValidTime(String dateInput, String timeInput) throws NumberFormatException {
         Pattern dateFormat = Pattern.compile("\\d{1,2}/\\d{1,2}/\\d{4}");
@@ -160,7 +159,7 @@ public class Project1 {
         String[] timeCheck = timeInput.split(":");
         int hour = Integer.parseInt(timeCheck[0]);
         int minute = Integer.parseInt(timeCheck[0]);
-        if (checkDateValidity(month, day, year) == false) {
+        if (!checkDateValidity(month, day, year)) {
             System.err.println("Invalid date");
             System.exit(1);
         }

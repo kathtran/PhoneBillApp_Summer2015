@@ -3,7 +3,7 @@ package edu.pdx.cs410J.kathtran;
 import edu.pdx.cs410J.AbstractPhoneBill;
 import edu.pdx.cs410J.AbstractPhoneCall;
 
-import java.util.Collection;
+import java.util.*;
 
 /**
  * Implements the abstract methods that can be found within the
@@ -13,7 +13,7 @@ import java.util.Collection;
  * maintained here.
  *
  * @author Kathleen Tran
- * @verison 1.0
+ * @version 1.0
  */
 public class PhoneBill extends AbstractPhoneBill {
 
@@ -28,7 +28,7 @@ public class PhoneBill extends AbstractPhoneBill {
      * customer. Each record, or item, is an instance of the
      * {@link PhoneCall} class.
      */
-    private Collection phoneCalls;
+    private ArrayList phoneCalls;
 
     /**
      * Default constructor.
@@ -46,7 +46,7 @@ public class PhoneBill extends AbstractPhoneBill {
      */
     public PhoneBill(String customer) {
         this.customer = customer;
-        this.phoneCalls = null;
+        this.phoneCalls = new ArrayList<PhoneCall>();
     }
 
     /**
@@ -76,5 +76,18 @@ public class PhoneBill extends AbstractPhoneBill {
     @Override
     public Collection getPhoneCalls() {
         return this.phoneCalls;
+    }
+
+    /**
+     * Gets the call record for the most recent phone call made.
+     *
+     * @param call an instance of the {@link PhoneCall} class that
+     *             contains the caller's phone number, callee's phone
+     *             number, and start and end times of the call.
+     * @return the call record at the end of the list.
+     * @throws ArrayIndexOutOfBoundsException if the index is out of range.
+     */
+    public Object getMostRecentPhoneCall(AbstractPhoneCall call) throws ArrayIndexOutOfBoundsException {
+        return this.phoneCalls.get(phoneCalls.size() - 1);
     }
 }

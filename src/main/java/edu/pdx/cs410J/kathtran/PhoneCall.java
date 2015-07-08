@@ -9,7 +9,7 @@ import edu.pdx.cs410J.AbstractPhoneCall;
  * callee number, start time, and end time.
  *
  * @author Kathleen Tran
- * @verison 1.0
+ * @version 1.0
  */
 public class PhoneCall extends AbstractPhoneCall {
 
