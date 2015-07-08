@@ -85,9 +85,8 @@ public class Project1 {
             PhoneCall phoneCall = new PhoneCall(callerNumber, calleeNumber, startTime, endTime);
             phoneBill.addPhoneCall(phoneCall);
 
-            if (printCall) {
+            if (printCall)
                 System.out.println(phoneBill.getMostRecentPhoneCall(phoneCall).toString());
-            }
         } catch (ArrayIndexOutOfBoundsException ex) {
             System.err.println("Missing command line argument(s)");
             System.exit(1);
@@ -223,7 +222,7 @@ public class Project1 {
                 "\n" +
                 "----------------------------------------------------------\n" +
                 "CS410J PROJECT 1: DESIGNING A PHONE BILL APPLICATION\n\n" +
-                "AUTHOR: KATHLEEN TRAN\nLAST MODIFIED: 7/5/2015\n\n");
+                "AUTHOR: KATHLEEN TRAN\nLAST MODIFIED: 7/7/2015\n\n");
         System.exit(1);
     }
 }
