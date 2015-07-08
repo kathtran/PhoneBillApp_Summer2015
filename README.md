@@ -17,19 +17,19 @@ Commands
 --------
 
 -README		The project description. Entering this option at
-		      the command line will display this page.
+		the command line will display this page.
 -print		A description of some phone call. Entering this
-		      option at the command line will display the
-		      description of the most recently added phone call.
+		option at the command line will display the
+		description of the most recently added phone call.
 
 To add a calling event, the following arguments must be provided
 in the order listed below, separated by a single white space.
 
-<customer>		    Person whose phone bill we're modelling
+<customer>		Person whose phone bill we're modelling
 <caller number>		Phone number of the caller
 <callee number>		Phone number of the person called
-<start time>		  Date and time the call began
-<end time>		    Date and time the call ended
+<start time>		Date and time the call began
+<end time>		Date and time the call ended
 
 If the customer name contains more than one word, it must be
 delimited by double quotes. Phone numbers must be of the form
