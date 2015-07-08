@@ -222,7 +222,8 @@ public class Project1 {
                 "nnn-nnn-nnnn where n is a number 0-9. Date and time should be\n" +
                 "in the format: mm/dd/yyyy hh:mm and zeros may be omitted where\n" +
                 "appropriate.\n\n" +
-                "usage: java edu.pdx.cs410J.kathtran.Project1 [options] <args>\n" +
+                "Options are to be entered before arguments, and only the customer\n" +
+                "name may be delimited by double quotes.\n" +
                 "\n" +
                 "----------------------------------------------------------\n" +
                 "CS410J PROJECT 1: DESIGNING A PHONE BILL APPLICATION\n\n" +
