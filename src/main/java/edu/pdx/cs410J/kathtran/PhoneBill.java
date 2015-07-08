@@ -6,11 +6,11 @@ import edu.pdx.cs410J.AbstractPhoneCall;
 import java.util.Collection;
 
 /**
- * This class implements the abstract methods that can be found
- * within the AbstractPhoneBill class in addition to new methods
- * that support the construction of the phone bill skeleton. The
- * customer's name as well as their collection of phone call
- * records are maintained here.
+ * Implements the abstract methods that can be found within the
+ * {@link AbstractPhoneBill} in addition to new methods that support
+ * the construction of the phone bill skeleton. The customer's
+ * name as well as their collection of phone call records are
+ * maintained here.
  *
  * @author Kathleen Tran
  * @verison 1.0
@@ -19,16 +19,14 @@ public class PhoneBill extends AbstractPhoneBill {
 
     /**
      * The customer's name. May consist of one or more words,
-     * and be comprised of any character, symbol, and number.
+     * and be comprised of any character, symbol, or number.
      */
     private String customer;
 
     /**
      * All phone call records that are associated with the
      * customer. Each record, or item, is an instance of the
-     * PhoneCall class.
-     *
-     * @see PhoneCall
+     * {@link PhoneCall} class.
      */
     private Collection phoneCalls;
 
@@ -62,7 +60,7 @@ public class PhoneBill extends AbstractPhoneBill {
     /**
      * Adds a phone call record to this phone bill.
      *
-     * @param call an instance of the <code>PhoneCall</code> class that
+     * @param call an instance of the {@link PhoneCall} class that
      *             contains the caller's phone number, callee's phone
      *             number, and start and end times of the call.
      */
