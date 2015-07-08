@@ -1,15 +1,13 @@
 package edu.pdx.cs410J.kathtran;
 
-import edu.pdx.cs410J.AbstractPhoneBill;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This class contains the main method that runs the Phone Bill Application
- * in addition to various helper methods that correct and/or validate
- * user-supplied command line arguments that are used to construct and
- * populate the phone bill.
+ * Represents Project 1 and contains the main method that runs the Phone
+ * Bill Application in addition to various helper methods that correct
+ * and/or validate user-supplied command line arguments that are used to
+ * construct and populate the phone bill.
  *
  * @author Kathleen Tran
  * @version 1.0
@@ -18,85 +16,91 @@ public class Project1 {
 
     /**
      * Takes an array of arguments to populate and model a customer's phone bill. Any
-     * missing and/or incorrect arguments will result in an output of the corresponding
+     * missing and/or incorrect arguments will result in the output of a corresponding
      * system error message.
      *
      * @param args options or arguments for the phone bill, or any combination of both.
      */
     public static void main(String[] args) {
 
-        if (args.length < 1) {
-            System.err.println("Missing command line arguments");
-            System.exit(1);
-        }
+        try {
+            Project1 project1 = new Project1();
 
-        Project1 project1 = new Project1();
+            for (String arg : args) {
+                if (arg.equals("-README"))
+                    project1.readme();
+            }
 
-        for (String arg : args) {
-            if (arg.equals("-README"))
-                project1.readme();
-        }
+            boolean printCall = false;
+            int index = 0;
+            if (args[index].equals("-print")) {     // The only time that a call will be printed will
+                printCall = true;                   // be when the `-print` option is specified as the
+                index += 1;                         // very first argument in the array of arguments.
+            }
 
-        boolean printCall = false;
-        int index = 0;
-        if (args[index].equals("-print")) {     // The only time that a call will be printed will
-            printCall = true;                   // be when the `-print` option is specified as the
-            index += 1;                         // very first argument in the array of arguments.
-        }
+            PhoneBill phoneBill = null;
+            if (args[index] != null && args[index].length() > 1) {
+                phoneBill = new PhoneBill(project1.correctNameCasing(args[index]));
+                index += 1;
+            } else {
+                System.err.println("Missing customer name");
+                System.exit(1);
+            }
 
-        PhoneBill phoneBill;
-        if (args[index] != null && args[index].length() > 1) {
-            phoneBill = new PhoneBill(project1.correctNameCasing(args[index]));
-            index += 1;
-        } else {
-            System.err.println("Missing customer name");
-            System.exit(1);
-        }
+            String callerNumber = null;     // Temporary Strings used to
+            String calleeNumber = null;     // hold each requirement of
+            String startTime = null;        // the phone call record.
+            String endTime = null;
+            if (args[index] != null && project1.isValidPhoneNumber(args[index])) {
+                callerNumber = args[index];
+                index += 1;
+            } else {
+                System.err.println("Missing caller number");
+                System.exit(1);
+            }
+            if (args[index] != null && project1.isValidPhoneNumber(args[index])) {
+                calleeNumber = args[index];
+                index += 1;
+            } else {
+                System.err.println("Missing callee number");
+                System.exit(1);
+            }
+            if (args[index] != null && args[index + 1] != null && project1.isValidTime(args[index], args[index + 1])) {
+                startTime = args[index];
+                startTime = startTime.concat(" " + args[index + 1]);
+                index += 2;
+            } else {
+                System.err.print("Missing start time");
+                System.exit(1);
+            }
+            if (args[index] != null && args[index + 1] != null && project1.isValidTime(args[index], args[index + 1])) {
+                endTime = args[index];
+                endTime = endTime.concat(" " + args[index + 1]);
+//                index += 2;
+            } else {
+                System.err.print("Missing end time");
+                System.exit(1);
+            }
 
-        String callerNumber = null;     // Temporary Strings used to
-        String calleeNumber = null;     // hold each requirement of
-        String startTime = null;        // the phone call record.
-        String endTime = null;
-        if (args[index] != null && project1.isValidPhoneNumber(args[index]) == true) {
-            callerNumber = args[index];
-            index += 1;
-        } else {
-            System.err.println("Missing caller number");
-            System.exit(1);
-        }
-        if (args[index] != null && project1.isValidPhoneNumber(args[index]) == true) {
-            calleeNumber = args[index];
-            index += 1;
-        } else {
-            System.err.println("Missing callee number");
-            System.exit(1);
-        }
-        if (args[index] != null && args[index + 1] != null && project1.isValidTime(args[index], args[index + 1])) {
-            startTime = args[index];
-            startTime = startTime.concat(" " + args[index + 1]);
-            index += 2;
-        } else {
-            System.err.print("Missing start time");
-            System.exit(1);
-        }
-        if (args[index] != null && args[index + 1] != null && project1.isValidTime(args[index], args[index + 1])) {
-            endTime = args[index];
-            endTime = endTime.concat(" " + args[index + 1]);
-        } else {
-            System.err.print("Missing end time");
-            System.exit(1);
-        }
+            PhoneCall phoneCall = null;
+            if (callerNumber != null && calleeNumber != null && startTime != null && endTime != null) {
+                phoneCall = new PhoneCall(callerNumber, calleeNumber, startTime, endTime);
+                phoneBill.addPhoneCall(phoneCall);
+            } else {
+                System.err.println("Insufficient arguments for the call record");
+                System.exit(1);
+            }
 
-        PhoneCall phoneCall = null;
-        if (callerNumber != null && calleeNumber != null && startTime != null && endTime != null)
-            phoneCall = new PhoneCall(callerNumber, calleeNumber, startTime, endTime);
-        else {
-            System.err.println("Insufficient arguments for the call record");
-            System.exit(1);
-        }
+            if (printCall) {
+                System.out.println(phoneBill.getMostRecentPhoneCall(phoneCall).toString());
+            }
 
-        if (printCall == true) {
-            System.out.println(phoneCall.toString());
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            System.err.println("Missing command line argument(s)");
+            System.exit(1);
+        } catch (NumberFormatException ex) {
+            System.err.println("Invalid date");
+            System.exit(1);
         }
     }
 
@@ -140,8 +144,9 @@ public class Project1 {
      * @param dateInput the month, day, and year, as a <code>String</code>.
      * @param timeInput the hour and minutes, as a <code>String</code>.
      * @return <code>True</code> if the form is valid, otherwise <code>false</code>.
+     * @throws NumberFormatException when argument cannot be parsed into an <code>Integer</code>.
      */
-    public boolean isValidTime(String dateInput, String timeInput) {
+    public boolean isValidTime(String dateInput, String timeInput) throws NumberFormatException {
         Pattern dateFormat = Pattern.compile("\\d{1,2}/\\d{1,2}/\\d{4}");
         Matcher dateToBeChecked = dateFormat.matcher(dateInput);
         String[] dateCheck = dateInput.split("/");
@@ -154,7 +159,7 @@ public class Project1 {
         String[] timeCheck = timeInput.split(":");
         int hour = Integer.parseInt(timeCheck[0]);
         int minute = Integer.parseInt(timeCheck[0]);
-        if (checkDateValidity(month, day, year) == false) {
+        if (!checkDateValidity(month, day, year)) {
             System.err.println("Invalid date");
             System.exit(1);
         }
@@ -167,14 +172,14 @@ public class Project1 {
      * Determines the validity of some given date.
      *
      * @param month the <code>int</code> that correlates to some month of the year.
-     * @param day the <code>int</code> that correlates to some day of the month.
-     * @param year the <code>int</code> that correlates to some year.
+     * @param day   the <code>int</code> that correlates to some day of the month.
+     * @param year  the <code>int</code> that correlates to some year.
      * @return <code>true</code> if the day is valid within the month, otherwise <code>false</code>.
      */
     public boolean checkDateValidity(int month, int day, int year) {
         if (month == 2 && day <= 28)
             return true;
-        if (month == 2 && day == 29 && (year%4 == 0 && year%100 != 0))
+        if (month == 2 && day == 29 && (year % 4 == 0 && year % 100 != 0))      // Leap year in the month of February
             return true;
         if (month == 9 || month == 4 || month == 6 || month == 11) {
             if (day <= 30)
@@ -188,7 +193,7 @@ public class Project1 {
     }
 
     /**
-     * This prints out a brief description of what the Phone Bill program does.
+     * Prints out a brief description of what the Phone Bill Application is and how it operates.
      */
     public void readme() {
         System.out.print("\n\t\tREADME - PHONE BILL APPLICATION\n" +

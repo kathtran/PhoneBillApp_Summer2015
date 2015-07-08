@@ -3,13 +3,13 @@ package edu.pdx.cs410J.kathtran;
 import edu.pdx.cs410J.AbstractPhoneCall;
 
 /**
- * This class implements the abstract methods that can be found
- * within the AbstractPhoneCall class. It represents a single
+ * Implements the abstract methods that can be found within
+ * the {@link AbstractPhoneCall}. It represents a single
  * phone call record, in which there exists a caller number,
  * callee number, start time, and end time.
  *
  * @author Kathleen Tran
- * @verison 1.0
+ * @version 1.0
  */
 public class PhoneCall extends AbstractPhoneCall {
 
