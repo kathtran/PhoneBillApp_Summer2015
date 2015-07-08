@@ -42,7 +42,7 @@ public class PhoneBill extends AbstractPhoneBill {
      * Constructor that specifies the customer's name.
      *
      * @param customer a name that may consist of one or more
-     *                 words, as some String.
+     *                 words, as some String
      */
     public PhoneBill(String customer) {
         this.customer = customer;
@@ -50,7 +50,7 @@ public class PhoneBill extends AbstractPhoneBill {
     }
 
     /**
-     * @return the name of the customer whose phone bill this is.
+     * @return the name of the customer whose phone bill this is
      */
     @Override
     public String getCustomer() {
@@ -62,7 +62,7 @@ public class PhoneBill extends AbstractPhoneBill {
      *
      * @param call an instance of the {@link PhoneCall} class that
      *             contains the caller's phone number, callee's phone
-     *             number, and start and end times of the call.
+     *             number, and start and end times of the call
      */
     @Override
     public void addPhoneCall(AbstractPhoneCall call) {
@@ -71,7 +71,7 @@ public class PhoneBill extends AbstractPhoneBill {
 
     /**
      * @return all of the phone calls (as instances of {@link
-     * AbstractPhoneCall}) in this phone bill.
+     * AbstractPhoneCall}) in this phone bill
      */
     @Override
     public Collection getPhoneCalls() {
@@ -83,9 +83,9 @@ public class PhoneBill extends AbstractPhoneBill {
      *
      * @param call an instance of the {@link PhoneCall} class that
      *             contains the caller's phone number, callee's phone
-     *             number, and start and end times of the call.
-     * @return the call record at the end of the list.
-     * @throws ArrayIndexOutOfBoundsException if the index is out of range.
+     *             number, and start and end times of the call
+     * @return the call record at the end of the list
+     * @throws ArrayIndexOutOfBoundsException if the index is out of range
      */
     public Object getMostRecentPhoneCall(AbstractPhoneCall call) throws ArrayIndexOutOfBoundsException {
         return this.phoneCalls.get(phoneCalls.size() - 1);

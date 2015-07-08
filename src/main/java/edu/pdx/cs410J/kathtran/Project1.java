@@ -76,9 +76,13 @@ public class Project1 {
             if (args[index] != null && args[index + 1] != null && project1.isValidTime(args[index], args[index + 1])) {
                 endTime = args[index];
                 endTime = endTime.concat(" " + args[index + 1]);
-//                index += 2;
+                index += 2;
             } else {
                 System.err.print("Missing end time");
+                System.exit(1);
+            }
+            if (index < args.length) {
+                System.err.print("Extraneous command line arguments");
                 System.exit(1);
             }
 
@@ -88,10 +92,10 @@ public class Project1 {
             if (printCall)
                 System.out.println(phoneBill.getMostRecentPhoneCall(phoneCall).toString());
         } catch (ArrayIndexOutOfBoundsException ex) {
-            System.err.println("Missing command line argument(s)");
+            System.err.println("Missing command line arguments");
             System.exit(1);
         } catch (NumberFormatException ex) {
-            System.err.println("Invalid date");
+            System.err.println("Invalid date entered");
             System.exit(1);
         }
     }
@@ -99,9 +103,9 @@ public class Project1 {
     /**
      * Corrects the casing of some <code>String</code> that is the customer's name.
      *
-     * @param nameInput some name provided by the user, as a <code>String</code>.
-     * @return a <code>String</code> where the first letter of each name is capitalized
-     * while the remaining letters are lower cased. Each part of the name is separated
+     * @param nameInput some name provided by the user
+     * @return a String where the first letter of each name is capitalized while
+     * the remaining letters are lower cased. Each part of the name is separated
      * by a single whitespace.
      */
     public String correctNameCasing(String nameInput) {
@@ -119,8 +123,8 @@ public class Project1 {
      * Determines whether or not some <code>String</code> is of the form
      * <code>nnn-nnn-nnnn</code> where <code>n</code> is a number <code>0-9</code>.
      *
-     * @param phoneNumberInput some phone number provided by the user, as a <code>String</code>.
-     * @return <code>True</code> if the form is valid, otherwise <code>false</code>.
+     * @param phoneNumberInput some phone number provided by the user
+     * @return True if the form is valid, otherwise false
      */
     public boolean isValidPhoneNumber(String phoneNumberInput) {
         Pattern phoneNumberFormat = Pattern.compile("\\d{3}-\\d{3}-\\d{4}");
@@ -133,10 +137,10 @@ public class Project1 {
      * <code>mm/dd/yyyy hh:mm</code> where the month, day, and hour may be
      * one digit if it is less than the value of nine.
      *
-     * @param dateInput the month, day, and year, as a <code>String</code>.
-     * @param timeInput the hour and minutes, as a <code>String</code>.
-     * @return <code>True</code> if the form is valid, otherwise <code>false</code>.
-     * @throws NumberFormatException when argument cannot be parsed into an <code>Integer</code>.
+     * @param dateInput the month, day, and year
+     * @param timeInput the hour and minute(s)
+     * @return True if the form is valid, otherwise false
+     * @throws NumberFormatException when argument cannot be parsed into an Integer
      */
     public boolean isValidTime(String dateInput, String timeInput) throws NumberFormatException {
         Pattern dateFormat = Pattern.compile("\\d{1,2}/\\d{1,2}/\\d{4}");
@@ -152,7 +156,7 @@ public class Project1 {
         int hour = Integer.parseInt(timeCheck[0]);
         int minute = Integer.parseInt(timeCheck[0]);
         if (!checkDateValidity(month, day, year)) {
-            System.err.println("Invalid date");
+            System.err.println("Invalid date entered");
             System.exit(1);
         }
         return (dateToBeChecked.matches() && (year >= 1900 && year <= 2015) &&
@@ -163,10 +167,10 @@ public class Project1 {
     /**
      * Determines the validity of some given date.
      *
-     * @param month the <code>int</code> that correlates to some month of the year.
-     * @param day   the <code>int</code> that correlates to some day of the month.
-     * @param year  the <code>int</code> that correlates to some year.
-     * @return <code>true</code> if the day is valid within the month, otherwise <code>false</code>.
+     * @param month the number representation of some month (1-12)
+     * @param day   some day of the month. May vary depending on month
+     * @param year  some year between 1900 and 2015, inclusive
+     * @return true if the day is valid within the month, otherwise false
      */
     public boolean checkDateValidity(int month, int day, int year) {
         if (month == 2 && day <= 28)
