@@ -14,22 +14,22 @@ import edu.pdx.cs410J.AbstractPhoneCall;
 public class PhoneCall extends AbstractPhoneCall {
 
     /**
-     * The phone number of the caller.
+     * The phone number of the caller
      */
     private String callerNumber;
 
     /**
-     * The phone number of the person who was called.
+     * The phone number of the person who was called
      */
     private String calleeNumber;
 
     /**
-     * The time at which the call began.
+     * The time at which the call began
      */
     private String startTime;
 
     /**
-     * The time at which the call ended.
+     * The time at which the call ended
      */
     private String endTime;
 
@@ -46,10 +46,10 @@ public class PhoneCall extends AbstractPhoneCall {
     /**
      * Constructor that specifies all of the fields existent within a call record.
      *
-     * @param callerNumber the number of the person who called, as a <code>String</code>.
-     * @param calleeNumber the number of the person who was called, as a <code>String</code>.
-     * @param startTime    the time at which the call began, as a <code>String</code>.
-     * @param endTime      the time at which the call ended, as a <code>String</code>.
+     * @param callerNumber the number of the person who called
+     * @param calleeNumber the number of the person who was called
+     * @param startTime    the time at which the call began
+     * @param endTime      the time at which the call ended
      */
     public PhoneCall(String callerNumber, String calleeNumber, String startTime, String endTime) {
         this.callerNumber = callerNumber;
@@ -59,7 +59,7 @@ public class PhoneCall extends AbstractPhoneCall {
     }
 
     /**
-     * @return the phone number of the person who originated this phone call.
+     * @return the phone number of the person who originated this phone call
      */
     @Override
     public String getCaller() {
@@ -67,7 +67,7 @@ public class PhoneCall extends AbstractPhoneCall {
     }
 
     /**
-     * @return the phone number of the person who received this phone call.
+     * @return the phone number of the person who received this phone call
      */
     @Override
     public String getCallee() {
@@ -76,7 +76,7 @@ public class PhoneCall extends AbstractPhoneCall {
 
     /**
      * @return a textual representation of the time that this phone call
-     * was originated.
+     * was originated
      */
     @Override
     public String getStartTimeString() {
@@ -85,7 +85,7 @@ public class PhoneCall extends AbstractPhoneCall {
 
     /**
      * @return a textual representation of the time that this phone call
-     * was completed.
+     * was completed
      */
     @Override
     public String getEndTimeString() {
