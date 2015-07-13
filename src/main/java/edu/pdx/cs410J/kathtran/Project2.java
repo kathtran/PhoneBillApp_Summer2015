@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * @author Kathleen Tran
  * @version 1.0
  */
-public class Project1 {
+public class Project2 {
 
     /**
      * Takes an array of arguments to populate and model a customer's phone bill. Any
@@ -24,11 +24,11 @@ public class Project1 {
     public static void main(String[] args) {
 
         try {
-            Project1 project1 = new Project1();
+            Project2 project2 = new Project2();
 
             for (String arg : args) {
                 if (arg.equals("-README"))
-                    project1.readme();
+                    project2.readme();
             }
 
             boolean printCall = false;
@@ -40,7 +40,7 @@ public class Project1 {
 
             PhoneBill phoneBill = null;
             if (args[index] != null && args[index].length() > 1) {
-                phoneBill = new PhoneBill(project1.correctNameCasing(args[index]));
+                phoneBill = new PhoneBill(project2.correctNameCasing(args[index]));
                 index += 1;
             } else {
                 System.err.println("Missing customer name");
@@ -51,21 +51,21 @@ public class Project1 {
             String calleeNumber = null;     // hold each requirement of
             String startTime = null;        // the phone call record.
             String endTime = null;
-            if (args[index] != null && project1.isValidPhoneNumber(args[index])) {
+            if (args[index] != null && project2.isValidPhoneNumber(args[index])) {
                 callerNumber = args[index];
                 index += 1;
             } else {
                 System.err.println("Missing caller number");
                 System.exit(1);
             }
-            if (args[index] != null && project1.isValidPhoneNumber(args[index])) {
+            if (args[index] != null && project2.isValidPhoneNumber(args[index])) {
                 calleeNumber = args[index];
                 index += 1;
             } else {
                 System.err.println("Missing callee number");
                 System.exit(1);
             }
-            if (args[index] != null && args[index + 1] != null && project1.isValidTime(args[index], args[index + 1])) {
+            if (args[index] != null && args[index + 1] != null && project2.isValidTime(args[index], args[index + 1])) {
                 startTime = args[index];
                 startTime = startTime.concat(" " + args[index + 1]);
                 index += 2;
@@ -73,7 +73,7 @@ public class Project1 {
                 System.err.print("Missing start time");
                 System.exit(1);
             }
-            if (args[index] != null && args[index + 1] != null && project1.isValidTime(args[index], args[index + 1])) {
+            if (args[index] != null && args[index + 1] != null && project2.isValidTime(args[index], args[index + 1])) {
                 endTime = args[index];
                 endTime = endTime.concat(" " + args[index + 1]);
                 index += 2;
