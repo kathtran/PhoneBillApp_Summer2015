@@ -4,13 +4,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Represents Project 1 and contains the main method that runs the Phone
+ * Represents Project 2 and contains the main method that runs the Phone
  * Bill Application in addition to various helper methods that correct
  * and/or validate user-supplied command line arguments that are used to
  * construct and populate the phone bill.
  *
+ * Additionally, there now exists calls to methods that handle working
+ * with external files for both reading to and writing from phone bills.
+ *
  * @author Kathleen Tran
- * @version 1.0
+ * @version 2.0
  */
 public class Project2 {
 
