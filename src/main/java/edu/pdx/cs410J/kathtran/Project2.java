@@ -170,19 +170,7 @@ public class Project2 {
      * @throws ParseException when the date is invalid
      */
     public boolean isValidDateAndTime(String dateInput, String timeInput) throws NumberFormatException, ParseException {
-        String[] dateCheck = dateInput.split("/");
-        int month = Integer.parseInt(dateCheck[0]);
-        int day = Integer.parseInt(dateCheck[1]);
-        int year = Integer.parseInt(dateCheck[2]);
-
-        Pattern timeFormat = Pattern.compile("\\d{1,2}:\\d{2}");
-        Matcher timeToBeChecked = timeFormat.matcher(timeInput);
-        String[] timeCheck = timeInput.split(":");
-        int hour = Integer.parseInt(timeCheck[0]);
-        int minute = Integer.parseInt(timeCheck[0]);
-
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        dateFormat.setLenient(false);
         dateFormat.parse(dateInput);
         return isValidDateAndTimeFormat(dateInput + " " + timeInput);
     }
@@ -237,7 +225,7 @@ public class Project2 {
         Pattern dateFormat = Pattern.compile("\\d{1,2}/\\d{1,2}/\\d{4}");
         Matcher dateToBeChecked = dateFormat.matcher(dateInput);
 
-        Pattern timeFormat = Pattern.compile("\\d{1,2}:\\d{2}");
+        Pattern timeFormat = Pattern.compile("([01]?[0-9]|2[0-3]):[0-5][0-9]");
         Matcher timeToBeChecked = timeFormat.matcher(timeInput);
 
         return dateToBeChecked.matches() && timeToBeChecked.matches();
