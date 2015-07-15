@@ -1,11 +1,12 @@
 package edu.pdx.cs410J.kathtran;
 
+import edu.pdx.cs410J.ParserException;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,7 +17,7 @@ import java.util.regex.Pattern;
  * construct and populate the phone bill.
  * <p>
  * v2.0 UPDATE: There now exists calls to methods that handle working
- * with external files for both reading to and writing from phone bills.
+ * with external files for both importing and exporting phone bill records.
  *
  * @author Kathleen Tran
  * @version 2.0
@@ -41,7 +42,7 @@ public class Project2 {
             }
 
             boolean printCall = false;
-            boolean savePhoneBill = false;
+            boolean loadPhoneBill = false;
             String fileName = null;
             int index = 0;
             for (String arg : args) {
@@ -63,21 +64,26 @@ public class Project2 {
                         System.err.println("Missing file name");
                         System.exit(1);
                     }
-                    savePhoneBill = true;
+                    loadPhoneBill = true;
                     fileName = args[i + 1];
                     index += 2;
                 }
             }
 
+            TextParser textParser = new TextParser();
+            textParser.setFileName(fileName);
             TextDumper textDumper = new TextDumper();
             textDumper.setFileName(fileName);
 
             PhoneBill phoneBill = null;
+            if (loadPhoneBill)
+                phoneBill = (PhoneBill) textParser.parse();
+
             if (args[index] != null && args[index].length() > 1) {
                 phoneBill = new PhoneBill(project2.correctNameCasing(args[index]));
                 index += 1;
             } else {
-                System.err.println("Cannot locate the customer name. " +
+                System.err.println("Cannot identify the customer name. " +
                         "You may want to check the order and/or formatting of your arguments.");
                 System.exit(1);
             }
@@ -90,7 +96,7 @@ public class Project2 {
                 callerNumber = args[index];
                 index += 1;
             } else {
-                System.err.println("Cannot locate the caller number. " +
+                System.err.println("Cannot identify the customer name and/or caller number. " +
                         "You may want to check the order and/or formatting of your arguments.");
                 System.exit(1);
             }
@@ -98,7 +104,7 @@ public class Project2 {
                 calleeNumber = args[index];
                 index += 1;
             } else {
-                System.err.println("Cannot locate the callee number. " +
+                System.err.println("Cannot identify the callee number. " +
                         "You may want to check the order and/or formatting of your arguments.");
                 System.exit(1);
             }
@@ -107,7 +113,7 @@ public class Project2 {
                 startTime = startTime.concat(" " + args[index + 1]);
                 index += 2;
             } else {
-                System.err.println("Cannot locate the start time. " +
+                System.err.println("Cannot identify the start time. " +
                         "You may want to check the order and/or formatting of your arguments.");
                 System.exit(1);
             }
@@ -116,12 +122,12 @@ public class Project2 {
                 endTime = endTime.concat(" " + args[index + 1]);
                 index += 2;
             } else {
-                System.err.println("Cannot locate the end time. " +
+                System.err.println("Cannot identify the end time. " +
                         "You may want to check the order and/or formatting of your arguments.");
                 System.exit(1);
             }
             if (index < args.length) {
-                System.err.print("Extraneous command line arguments");
+                System.err.print("Extraneous and/or malformatted command line arguments");
                 System.exit(1);
             }
 
@@ -133,20 +139,21 @@ public class Project2 {
 
             if (printCall)
                 System.out.println(phoneBill.getMostRecentPhoneCall(phoneCall).toString());
-            if (savePhoneBill) {
+            if (loadPhoneBill) {
                 if (fileExists) {
                     if (textDumper.checkCustomerName(phoneBill.getCustomer()))
                         textDumper.dump(phoneBill);
                     else {
-                        System.err.println("The supplied customer name and the name on file did not match. " +
-                                "The phone bill record was not saved.");
+                        System.err.println("The file name specified already exists! However, it belongs to a different customer. " +
+                                "\nThe phone bill record was not saved. You may either specify a different file name or\n" +
+                                "check to make sure that your supplied customer name matches the one on file.");
                         System.exit(1);
                     }
                 } else
                     textDumper.dump(phoneBill);
             }
         } catch (ArrayIndexOutOfBoundsException ex) {
-            System.err.println("Missing command line arguments");
+            System.err.println("Missing and/or malformatted command line arguments");
             System.exit(1);
         } catch (NumberFormatException ex) {
             System.err.println("Invalid and/or malformatted date(s) entered");
@@ -156,6 +163,9 @@ public class Project2 {
             System.exit(1);
         } catch (IOException ex) {
             System.err.println("Invalid and/or malformatted text file.");
+            System.exit(1);
+        } catch (ParserException ex) {
+            System.err.println("Something went wrong whilst attempting to parse the specified file.");
             System.exit(1);
         }
     }
@@ -222,7 +232,8 @@ public class Project2 {
         String dateInput = check[0];
         String timeInput = check[1];
 
-        Pattern dateFormat = Pattern.compile("\\d{1,2}/\\d{1,2}/\\d{4}");
+//        Pattern dateFormat = Pattern.compile("\\d{1,2}/\\d{1,2}/\\d{4}");
+        Pattern dateFormat = Pattern.compile("(0?[1-9]|1[0-2])/(0?[1-9]|1[0-9]|2[0-9]|3[0-1])/(1[89][7-9][0-9]|20[01][0-5])");
         Matcher dateToBeChecked = dateFormat.matcher(dateInput);
 
         Pattern timeFormat = Pattern.compile("([01]?[0-9]|2[0-3]):[0-5][0-9]");
