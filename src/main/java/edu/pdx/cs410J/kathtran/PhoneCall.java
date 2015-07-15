@@ -2,6 +2,11 @@ package edu.pdx.cs410J.kathtran;
 
 import edu.pdx.cs410J.AbstractPhoneCall;
 
+import java.text.DateFormat;
+import java.util.Date;
+
+import static java.text.DateFormat.SHORT;
+
 /**
  * Implements the abstract methods that can be found within
  * the {@link AbstractPhoneCall}. It represents a single

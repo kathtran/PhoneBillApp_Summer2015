@@ -1,18 +1,25 @@
 package edu.pdx.cs410J.kathtran;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Represents Project 1 and contains the main method that runs the Phone
+ * Represents Project 2 and contains the main method that runs the Phone
  * Bill Application in addition to various helper methods that correct
  * and/or validate user-supplied command line arguments that are used to
  * construct and populate the phone bill.
+ * <p>
+ * In addition, there now exists calls to methods that handle working
+ * with external files for both reading to and writing from phone bills.
  *
  * @author Kathleen Tran
- * @version 1.0
+ * @version 2.0
  */
-public class Project1 {
+public class Project2 {
 
     /**
      * Takes an array of arguments to populate and model a customer's phone bill. Any
@@ -24,26 +31,43 @@ public class Project1 {
     public static void main(String[] args) {
 
         try {
-            Project1 project1 = new Project1();
+            Project2 project2 = new Project2();
 
             for (String arg : args) {
                 if (arg.equals("-README"))
-                    project1.readme();
+                    project2.readme();
             }
 
             boolean printCall = false;
             int index = 0;
-            if (args[index].equals("-print")) {     // The only time that a call will be printed will
-                printCall = true;                   // be when the `-print` option is specified as the
-                index += 1;                         // very first argument in the array of arguments.
+            for (String arg : args) {
+                if (arg.startsWith("-")) {
+                    if (arg.equals("-print")) {
+                        printCall = true;
+                        index += 1;
+                    }
+                    if (arg.startsWith("-textFile ")) {
+                        //TODO
+                    }
+                    if (!arg.equals("-print") && !arg.startsWith("-textFile ")) {
+                        System.err.println("Unknown command line option");
+                        System.exit(1);
+                    }
+                }
             }
+
+//            int index = 0;
+//            if (args[index].equals("-print")) {     // The only time that a call will be printed will
+//                printCall = true;                   // be when the `-print` option is specified as the
+//                index += 1;                         // very first argument in the array of arguments.
+//            }
 
             PhoneBill phoneBill = null;
             if (args[index] != null && args[index].length() > 1) {
-                phoneBill = new PhoneBill(project1.correctNameCasing(args[index]));
+                phoneBill = new PhoneBill(project2.correctNameCasing(args[index]));
                 index += 1;
             } else {
-                System.err.println("Missing customer name");
+                System.err.println("Missing and/or malformatted customer name");
                 System.exit(1);
             }
 
@@ -51,34 +75,34 @@ public class Project1 {
             String calleeNumber = null;     // hold each requirement of
             String startTime = null;        // the phone call record.
             String endTime = null;
-            if (args[index] != null && project1.isValidPhoneNumber(args[index])) {
+            if (args[index] != null && project2.isValidPhoneNumber(args[index])) {
                 callerNumber = args[index];
                 index += 1;
             } else {
-                System.err.println("Missing caller number");
+                System.err.println("Missing and/or malformatted caller number");
                 System.exit(1);
             }
-            if (args[index] != null && project1.isValidPhoneNumber(args[index])) {
+            if (args[index] != null && project2.isValidPhoneNumber(args[index])) {
                 calleeNumber = args[index];
                 index += 1;
             } else {
-                System.err.println("Missing callee number");
+                System.err.println("Missing and/or malformatted callee number");
                 System.exit(1);
             }
-            if (args[index] != null && args[index + 1] != null && project1.isValidTime(args[index], args[index + 1])) {
+            if (args[index] != null && args[index + 1] != null && project2.isValidDateAndTime(args[index], args[index + 1])) {
                 startTime = args[index];
                 startTime = startTime.concat(" " + args[index + 1]);
                 index += 2;
             } else {
-                System.err.print("Missing start time");
+                System.err.print("Missing and/or malformatted start time");
                 System.exit(1);
             }
-            if (args[index] != null && args[index + 1] != null && project1.isValidTime(args[index], args[index + 1])) {
+            if (args[index] != null && args[index + 1] != null && project2.isValidDateAndTime(args[index], args[index + 1])) {
                 endTime = args[index];
                 endTime = endTime.concat(" " + args[index + 1]);
                 index += 2;
             } else {
-                System.err.print("Missing end time");
+                System.err.print("Missing and/or malformatted end time");
                 System.exit(1);
             }
             if (index < args.length) {
@@ -95,7 +119,10 @@ public class Project1 {
             System.err.println("Missing command line arguments");
             System.exit(1);
         } catch (NumberFormatException ex) {
-            System.err.println("Invalid date entered");
+            System.err.println("Invalid and/or malformatted date(s) entered");
+            System.exit(1);
+        } catch (ParseException ex) {
+            System.err.println("Invalid date(s) entered");
             System.exit(1);
         }
     }
@@ -133,59 +160,75 @@ public class Project1 {
     }
 
     /**
+     * Determines the validity of some <code>String</code> representative of the date
+     * and time both in regards to the values provided and to their formatting.
+     *
+     * @param dateInput the month, day, and year
+     * @param timeInput the hour and minute(s)
+     * @return True if the both the date and formatting are valid, otherwise false
+     * @throws NumberFormatException when the argument cannot be parsed into an Integer
+     * @throws ParseException when the date is invalid
+     */
+    public boolean isValidDateAndTime(String dateInput, String timeInput) throws NumberFormatException, ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        dateFormat.parse(dateInput);
+        return isValidDateAndTimeFormat(dateInput + " " + timeInput);
+    }
+
+    public int getMonth(int month) {
+        month -= 1;
+        switch (month) {
+            case 0:
+                return Calendar.JANUARY;
+            case 1:
+                return Calendar.FEBRUARY;
+            case 2:
+                return Calendar.MARCH;
+            case 3:
+                return Calendar.APRIL;
+            case 4:
+                return Calendar.MAY;
+            case 5:
+                return Calendar.JUNE;
+            case 6:
+                return Calendar.JULY;
+            case 7:
+                return Calendar.AUGUST;
+            case 8:
+                return Calendar.SEPTEMBER;
+            case 9:
+                return Calendar.OCTOBER;
+            case 10:
+                return Calendar.NOVEMBER;
+            case 11:
+                return Calendar.DECEMBER;
+            default:
+                System.err.println("Invalid and/or malformatted date");
+                System.exit(1);
+        }
+        return -1;
+    }
+
+    /**
      * Determines whether or not some <code>String</code> is of the form
      * <code>mm/dd/yyyy hh:mm</code> where the month, day, and hour may be
      * one digit if it is less than the value of nine.
      *
-     * @param dateInput the month, day, and year
-     * @param timeInput the hour and minute(s)
+     * @param dateAndTimeToCheck date and time
      * @return True if the form is valid, otherwise false
-     * @throws NumberFormatException when argument cannot be parsed into an Integer
      */
-    public boolean isValidTime(String dateInput, String timeInput) throws NumberFormatException {
+    public boolean isValidDateAndTimeFormat(String dateAndTimeToCheck) {
+        String[] check = dateAndTimeToCheck.split(" ");
+        String dateInput = check[0];
+        String timeInput = check[1];
+
         Pattern dateFormat = Pattern.compile("\\d{1,2}/\\d{1,2}/\\d{4}");
         Matcher dateToBeChecked = dateFormat.matcher(dateInput);
-        String[] dateCheck = dateInput.split("/");
-        int month = Integer.parseInt(dateCheck[0]);
-        int day = Integer.parseInt(dateCheck[1]);
-        int year = Integer.parseInt(dateCheck[2]);
 
-        Pattern timeFormat = Pattern.compile("\\d{1,2}:\\d{2}");
+        Pattern timeFormat = Pattern.compile("([01]?[0-9]|2[0-3]):[0-5][0-9]");
         Matcher timeToBeChecked = timeFormat.matcher(timeInput);
-        String[] timeCheck = timeInput.split(":");
-        int hour = Integer.parseInt(timeCheck[0]);
-        int minute = Integer.parseInt(timeCheck[0]);
-        if (!checkDateValidity(month, day, year)) {
-            System.err.println("Invalid date entered");
-            System.exit(1);
-        }
-        return (dateToBeChecked.matches() && (year >= 1900 && year <= 2015) &&
-                timeToBeChecked.matches() && (hour >= 0 && hour <= 23) &&
-                (minute >= 0 && minute <= 59));
-    }
 
-    /**
-     * Determines the validity of some given date.
-     *
-     * @param month the number representation of some month (1-12)
-     * @param day   some day of the month. May vary depending on month
-     * @param year  some year between 1900 and 2015, inclusive
-     * @return true if the day is valid within the month, otherwise false
-     */
-    public boolean checkDateValidity(int month, int day, int year) {
-        if (month == 2 && day <= 28)
-            return true;
-        if (month == 2 && day == 29 && (year % 4 == 0 && year % 100 != 0))      // Leap year in the month of February
-            return true;
-        if (month == 9 || month == 4 || month == 6 || month == 11) {
-            if (day <= 30)
-                return true;
-        }
-        if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
-            if (day <= 31)
-                return true;
-        }
-        return false;
+        return dateToBeChecked.matches() && timeToBeChecked.matches();
     }
 
     /**
