@@ -13,7 +13,7 @@ import java.util.*;
  * maintained here.
  *
  * @author Kathleen Tran
- * @version 1.0
+ * @version 2.0
  */
 public class PhoneBill extends AbstractPhoneBill {
 
@@ -35,7 +35,7 @@ public class PhoneBill extends AbstractPhoneBill {
      */
     public PhoneBill() {
         this.customer = null;
-        this.phoneCalls = null;
+        this.phoneCalls = new ArrayList<PhoneCall>();
     }
 
     /**
@@ -89,5 +89,9 @@ public class PhoneBill extends AbstractPhoneBill {
      */
     public Object getMostRecentPhoneCall(AbstractPhoneCall call) throws ArrayIndexOutOfBoundsException {
         return this.phoneCalls.get(phoneCalls.size() - 1);
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
     }
 }

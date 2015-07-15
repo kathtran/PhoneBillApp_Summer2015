@@ -31,7 +31,9 @@ public class TextDumper implements PhoneBillDumper {
      */
     boolean checkCustomerName(String customer) throws IOException {
         File file = new File(getFileName());
-        if (file.exists()) {
+        boolean fileExists = file.exists();
+
+        if (fileExists) {
             FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
             String line = br.readLine();
@@ -56,31 +58,25 @@ public class TextDumper implements PhoneBillDumper {
      */
     @Override
     public void dump(AbstractPhoneBill bill) throws IOException {
+        @SuppressWarnings("unchecked")
         ArrayList<PhoneCall> phoneBill = (ArrayList<PhoneCall>) bill.getPhoneCalls();
         File file = new File(getFileName());
         boolean fileExists = file.exists();
 
         FileWriter fw = new FileWriter(file, true);
-        BufferedWriter bw;
-        bw = new BufferedWriter(fw);
+        BufferedWriter bw = new BufferedWriter(fw);
         if (!fileExists)
             bw.write("CUSTOMER:\n" + bill.getCustomer() + "\n");
-        if (checkCustomerName(bill.getCustomer())) {
-            bw.write("PHONE CALL:\n");
-            if (!phoneBill.isEmpty()) {
-                for (PhoneCall call : phoneBill) {
-                    bw.write(call.getCaller() + "\n");
-                    bw.write(call.getCallee() + "\n");
-                    bw.write(call.getStartTimeString() + "\n");
-                    bw.write(call.getEndTimeString() + "\n");
-                }
+        bw.write("PHONE CALL:\n");
+        if (!phoneBill.isEmpty()) {
+            for (PhoneCall call : phoneBill) {
+                bw.write(call.getCaller() + "\n");
+                bw.write(call.getCallee() + "\n");
+                bw.write(call.getStartTimeString() + "\n");
+                bw.write(call.getEndTimeString() + "\n");
             }
-        } else {
-            System.err.println("Customer name mismatch between new entry and existing record");
-            System.exit(1);
         }
         bw.close();
-        fw.close();
     }
 
     public String getFileName() {
@@ -88,6 +84,6 @@ public class TextDumper implements PhoneBillDumper {
     }
 
     public void setFileName(String fileName) {
-        this.fileName = fileName;
+        this.fileName = fileName + ".txt";
     }
 }

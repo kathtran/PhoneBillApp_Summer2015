@@ -1,5 +1,7 @@
 package edu.pdx.cs410J.kathtran;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,7 +15,7 @@ import java.util.regex.Pattern;
  * and/or validate user-supplied command line arguments that are used to
  * construct and populate the phone bill.
  * <p>
- * In addition, there now exists calls to methods that handle working
+ * v2.0 UPDATE: There now exists calls to methods that handle working
  * with external files for both reading to and writing from phone bills.
  *
  * @author Kathleen Tran
@@ -39,6 +41,8 @@ public class Project2 {
             }
 
             boolean printCall = false;
+            boolean savePhoneBill = false;
+            String fileName = null;
             int index = 0;
             for (String arg : args) {
                 if (arg.startsWith("-")) {
@@ -46,28 +50,35 @@ public class Project2 {
                         printCall = true;
                         index += 1;
                     }
-                    if (arg.startsWith("-textFile ")) {
-                        //TODO
-                    }
-                    if (!arg.equals("-print") && !arg.startsWith("-textFile ")) {
+                    if (!arg.equals("-print") && !arg.equals("-textFile")) {
                         System.err.println("Unknown command line option");
                         System.exit(1);
                     }
                 }
             }
 
-//            int index = 0;
-//            if (args[index].equals("-print")) {     // The only time that a call will be printed will
-//                printCall = true;                   // be when the `-print` option is specified as the
-//                index += 1;                         // very first argument in the array of arguments.
-//            }
+            for (int i = 0; i < args.length; ++i) {
+                if (args[i].equals("-textFile") && args[i + 1] != null) {
+                    if (args[i + 1].contains("-")) {
+                        System.err.println("Missing file name");
+                        System.exit(1);
+                    }
+                    savePhoneBill = true;
+                    fileName = args[i + 1];
+                    index += 2;
+                }
+            }
+
+            TextDumper textDumper = new TextDumper();
+            textDumper.setFileName(fileName);
 
             PhoneBill phoneBill = null;
             if (args[index] != null && args[index].length() > 1) {
                 phoneBill = new PhoneBill(project2.correctNameCasing(args[index]));
                 index += 1;
             } else {
-                System.err.println("Missing and/or malformatted customer name");
+                System.err.println("Cannot locate the customer name. " +
+                        "You may want to check the order and/or formatting of your arguments.");
                 System.exit(1);
             }
 
@@ -79,14 +90,16 @@ public class Project2 {
                 callerNumber = args[index];
                 index += 1;
             } else {
-                System.err.println("Missing and/or malformatted caller number");
+                System.err.println("Cannot locate the caller number. " +
+                        "You may want to check the order and/or formatting of your arguments.");
                 System.exit(1);
             }
             if (args[index] != null && project2.isValidPhoneNumber(args[index])) {
                 calleeNumber = args[index];
                 index += 1;
             } else {
-                System.err.println("Missing and/or malformatted callee number");
+                System.err.println("Cannot locate the callee number. " +
+                        "You may want to check the order and/or formatting of your arguments.");
                 System.exit(1);
             }
             if (args[index] != null && args[index + 1] != null && project2.isValidDateAndTime(args[index], args[index + 1])) {
@@ -94,7 +107,8 @@ public class Project2 {
                 startTime = startTime.concat(" " + args[index + 1]);
                 index += 2;
             } else {
-                System.err.print("Missing and/or malformatted start time");
+                System.err.println("Cannot locate the start time. " +
+                        "You may want to check the order and/or formatting of your arguments.");
                 System.exit(1);
             }
             if (args[index] != null && args[index + 1] != null && project2.isValidDateAndTime(args[index], args[index + 1])) {
@@ -102,7 +116,8 @@ public class Project2 {
                 endTime = endTime.concat(" " + args[index + 1]);
                 index += 2;
             } else {
-                System.err.print("Missing and/or malformatted end time");
+                System.err.println("Cannot locate the end time. " +
+                        "You may want to check the order and/or formatting of your arguments.");
                 System.exit(1);
             }
             if (index < args.length) {
@@ -113,8 +128,23 @@ public class Project2 {
             PhoneCall phoneCall = new PhoneCall(callerNumber, calleeNumber, startTime, endTime);
             phoneBill.addPhoneCall(phoneCall);
 
+            File file = new File(textDumper.getFileName());
+            boolean fileExists = file.exists();
+
             if (printCall)
                 System.out.println(phoneBill.getMostRecentPhoneCall(phoneCall).toString());
+            if (savePhoneBill) {
+                if (fileExists) {
+                    if (textDumper.checkCustomerName(phoneBill.getCustomer()))
+                        textDumper.dump(phoneBill);
+                    else {
+                        System.err.println("The supplied customer name and the name on file did not match. " +
+                                "The phone bill record was not saved.");
+                        System.exit(1);
+                    }
+                } else
+                    textDumper.dump(phoneBill);
+            }
         } catch (ArrayIndexOutOfBoundsException ex) {
             System.err.println("Missing command line arguments");
             System.exit(1);
@@ -123,6 +153,9 @@ public class Project2 {
             System.exit(1);
         } catch (ParseException ex) {
             System.err.println("Invalid date(s) entered");
+            System.exit(1);
+        } catch (IOException ex) {
+            System.err.println("Invalid and/or malformatted text file.");
             System.exit(1);
         }
     }
@@ -136,6 +169,7 @@ public class Project2 {
      * by a single whitespace.
      */
     public String correctNameCasing(String nameInput) {
+        @SuppressWarnings("all")
         String correctedName = new String();
         String[] fullName = nameInput.split(" ");
         for (String name : fullName) {
@@ -167,46 +201,12 @@ public class Project2 {
      * @param timeInput the hour and minute(s)
      * @return True if the both the date and formatting are valid, otherwise false
      * @throws NumberFormatException when the argument cannot be parsed into an Integer
-     * @throws ParseException when the date is invalid
+     * @throws ParseException        when the date is invalid
      */
     public boolean isValidDateAndTime(String dateInput, String timeInput) throws NumberFormatException, ParseException {
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         dateFormat.parse(dateInput);
         return isValidDateAndTimeFormat(dateInput + " " + timeInput);
-    }
-
-    public int getMonth(int month) {
-        month -= 1;
-        switch (month) {
-            case 0:
-                return Calendar.JANUARY;
-            case 1:
-                return Calendar.FEBRUARY;
-            case 2:
-                return Calendar.MARCH;
-            case 3:
-                return Calendar.APRIL;
-            case 4:
-                return Calendar.MAY;
-            case 5:
-                return Calendar.JUNE;
-            case 6:
-                return Calendar.JULY;
-            case 7:
-                return Calendar.AUGUST;
-            case 8:
-                return Calendar.SEPTEMBER;
-            case 9:
-                return Calendar.OCTOBER;
-            case 10:
-                return Calendar.NOVEMBER;
-            case 11:
-                return Calendar.DECEMBER;
-            default:
-                System.err.println("Invalid and/or malformatted date");
-                System.exit(1);
-        }
-        return -1;
     }
 
     /**
@@ -240,19 +240,26 @@ public class Project2 {
                 "Introduction\n" +
                 "------------\n\n" +
                 "Welcome to the Phone Bill Application! This is a command-line\n" +
-                "application that allows the user to model a phone bill. In its\n" +
-                "current version, the user may associate at most one phone record\n" +
-                "per customer name. However, the information will not be stored\n" +
-                "between each usage. A single phone record consists of the phone\n" +
-                "number of the caller, the phone number that was called, the time\n" +
-                "at which the call began, and the time at which the call ended.\n\n" +
+                "application that allows the user to model a phone bill. In version\n" +
+                "1.0, the user may associate at most one phone record per customer\n" +
+                "name. However, the information will not be stored between each usage.\n" +
+                "A single phone record consists of the phone number of the caller, the\n" +
+                "phone number that was called, the time at which the call began, and\n" +
+                "the time at which the call ended.\n\n" +
+                "Updates\n" +
+                "-------\n" +
+                "v2.0\t\tThe program now allows the user to save their phone bill\n" +
+                "\t\tto an external text file (both new and existing). Users may\n" +
+                "\t\talso load phone bill records from existing files. Each file\n" +
+                "\t\tcorrelates to a single user and their phone call(s).\n\n" +
                 "Commands\n" +
                 "--------\n\n" +
                 "-README\t\tThe project description. Entering this option at\n" +
                 "\t\tthe command line will display this page.\n" +
                 "-print\t\tA description of some phone call. Entering this\n" +
                 "\t\toption at the command line will display the\n" +
-                "\t\tdescription of the most recently added phone call.\n\n" +
+                "\t\tdescription of the most recently added phone call.\n" +
+                "-textFile <file>\t\tWhere to read/write the phone bill\n\n" +
                 "To add a calling event, the following arguments must be provided\n" +
                 "in the order listed below, separated by a single white space.\n\n" +
                 "<customer>\t\tPerson whose phone bill we're modelling\n" +
@@ -269,8 +276,8 @@ public class Project2 {
                 "name may be delimited by double quotes.\n" +
                 "\n" +
                 "----------------------------------------------------------\n" +
-                "CS410J PROJECT 1: DESIGNING A PHONE BILL APPLICATION\n\n" +
-                "AUTHOR: KATHLEEN TRAN\nLAST MODIFIED: 7/7/2015\n\n");
+                "CS410J PROJECT 2: STORING YOUR PHONE BILL IN A TEXT FILE\n\n" +
+                "AUTHOR: KATHLEEN TRAN\nLAST MODIFIED: 7/14/2015\n\n");
         System.exit(1);
     }
 }
