@@ -13,7 +13,7 @@ import java.util.*;
  * maintained here.
  *
  * @author Kathleen Tran
- * @version 2.0
+ * @version 3.0
  */
 public class PhoneBill extends AbstractPhoneBill {
 

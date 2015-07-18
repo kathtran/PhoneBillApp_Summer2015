@@ -13,7 +13,7 @@ import java.text.ParseException;
  * that contains the record of some existing phone bill.
  *
  * @author Kathleen Tran
- * @version 2.0
+ * @version 3.0
  */
 public class TextParser implements PhoneBillParser {
 
@@ -30,7 +30,7 @@ public class TextParser implements PhoneBillParser {
      */
     @Override
     public AbstractPhoneBill parse() throws ParserException {
-        Project2 project2 = new Project2();
+        Project3 project3 = new Project3();
         PhoneBill phoneBill;
         PhoneCall phoneCall;
         File file = new File(getFileName());
@@ -52,7 +52,7 @@ public class TextParser implements PhoneBillParser {
 
                 if (line != null && line.equals("CUSTOMER:")) {
                     line = br.readLine();
-                    phoneBill = new PhoneBill(project2.correctNameCasing(line));
+                    phoneBill = new PhoneBill(project3.correctNameCasing(line));
                     line = br.readLine();
 
                     while (line != null) {
@@ -69,10 +69,10 @@ public class TextParser implements PhoneBillParser {
                             endDate = end[0];
                             endTime = end[1];
 
-                            if (project2.isValidPhoneNumber(caller) &&
-                                    project2.isValidPhoneNumber(callee) &&
-                                    project2.isValidDateAndTime(startDate, startTime) &&
-                                    project2.isValidDateAndTime(endDate, endTime)) {
+                            if (project3.isValidPhoneNumber(caller) &&
+                                    project3.isValidPhoneNumber(callee) &&
+                                    project3.isValidDateAndTime(startDate, startTime) &&
+                                    project3.isValidDateAndTime(endDate, endTime)) {
                                 phoneCall = new PhoneCall(caller, callee, starting, ending);
                                 phoneBill.addPhoneCall(phoneCall);
                             }
