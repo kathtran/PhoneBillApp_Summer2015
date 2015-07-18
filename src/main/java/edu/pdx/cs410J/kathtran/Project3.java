@@ -11,18 +11,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Represents Project 2 and contains the main method that runs the Phone
+ * Represents Project 3 and contains the main method that runs the Phone
  * Bill Application in addition to various helper methods that correct
  * and/or validate user-supplied command line arguments that are used to
  * construct and populate the phone bill.
  * <p>
  * v2.0 UPDATE: There now exists calls to methods that handle working
  * with external files for both importing and exporting phone bill records.
+ * <p>
+ * v3.0 UPDATE: In addition to the pretty printer, changes have also been
+ * made to the date and time formatting of each phone call, and the calls
+ * under each phone bill are now sorted by the times at which the they
+ * began.
  *
  * @author Kathleen Tran
- * @version 2.0
+ * @version 3.0
  */
-public class Project2 {
+public class Project3 {
 
     /**
      * Takes an array of arguments to populate and model a customer's phone bill. Any
@@ -34,11 +39,11 @@ public class Project2 {
     public static void main(String[] args) {
 
         try {
-            Project2 project2 = new Project2();
+            Project3 project3 = new Project3();
 
             for (String arg : args) {
                 if (arg.equals("-README"))
-                    project2.readme();
+                    project3.readme();
             }
 
             boolean printCall = false;
@@ -80,7 +85,7 @@ public class Project2 {
                 phoneBill = (PhoneBill) textParser.parse();
 
             if (args[index] != null && args[index].length() > 1) {
-                phoneBill = new PhoneBill(project2.correctNameCasing(args[index]));
+                phoneBill = new PhoneBill(project3.correctNameCasing(args[index]));
                 index += 1;
             } else {
                 System.err.println("Cannot identify the customer name. " +
@@ -92,7 +97,7 @@ public class Project2 {
             String calleeNumber = null;     // hold each requirement of
             String startTime = null;        // the phone call record.
             String endTime = null;
-            if (args[index] != null && project2.isValidPhoneNumber(args[index])) {
+            if (args[index] != null && project3.isValidPhoneNumber(args[index])) {
                 callerNumber = args[index];
                 index += 1;
             } else {
@@ -100,7 +105,7 @@ public class Project2 {
                         "You may want to check the order and/or formatting of your arguments.");
                 System.exit(1);
             }
-            if (args[index] != null && project2.isValidPhoneNumber(args[index])) {
+            if (args[index] != null && project3.isValidPhoneNumber(args[index])) {
                 calleeNumber = args[index];
                 index += 1;
             } else {
@@ -108,7 +113,7 @@ public class Project2 {
                         "You may want to check the order and/or formatting of your arguments.");
                 System.exit(1);
             }
-            if (args[index] != null && args[index + 1] != null && project2.isValidDateAndTime(args[index], args[index + 1])) {
+            if (args[index] != null && args[index + 1] != null && project3.isValidDateAndTime(args[index], args[index + 1])) {
                 startTime = args[index];
                 startTime = startTime.concat(" " + args[index + 1]);
                 index += 2;
@@ -117,7 +122,7 @@ public class Project2 {
                         "You may want to check the order and/or formatting of your arguments.");
                 System.exit(1);
             }
-            if (args[index] != null && args[index + 1] != null && project2.isValidDateAndTime(args[index], args[index + 1])) {
+            if (args[index] != null && args[index + 1] != null && project3.isValidDateAndTime(args[index], args[index + 1])) {
                 endTime = args[index];
                 endTime = endTime.concat(" " + args[index + 1]);
                 index += 2;
@@ -215,31 +220,23 @@ public class Project2 {
      */
     public boolean isValidDateAndTime(String dateInput, String timeInput) throws NumberFormatException, ParseException {
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        dateFormat.setLenient(false);
         dateFormat.parse(dateInput);
-        return isValidDateAndTimeFormat(dateInput + " " + timeInput);
+        return isValidTimeOfDay(timeInput);
     }
 
     /**
-     * Determines whether or not some <code>String</code> is of the form
-     * <code>mm/dd/yyyy hh:mm</code> where the month, day, and hour may be
-     * one digit if it is less than the value of nine.
+     * Determines whether or not the time of some <code>String</code> is
+     * of the form <code>hh:mm</code> where the hour may be one digit if
+     * it is less than the value of nine.
      *
-     * @param dateAndTimeToCheck date and time
+     * @param timeToCheck time
      * @return True if the form is valid, otherwise false
      */
-    public boolean isValidDateAndTimeFormat(String dateAndTimeToCheck) {
-        String[] check = dateAndTimeToCheck.split(" ");
-        String dateInput = check[0];
-        String timeInput = check[1];
-
-//        Pattern dateFormat = Pattern.compile("\\d{1,2}/\\d{1,2}/\\d{4}");
-        Pattern dateFormat = Pattern.compile("(0?[1-9]|1[0-2])/(0?[1-9]|1[0-9]|2[0-9]|3[0-1])/(1[89][7-9][0-9]|20[01][0-5])");
-        Matcher dateToBeChecked = dateFormat.matcher(dateInput);
-
+    public boolean isValidTimeOfDay(String timeToCheck) {
         Pattern timeFormat = Pattern.compile("([01]?[0-9]|2[0-3]):[0-5][0-9]");
-        Matcher timeToBeChecked = timeFormat.matcher(timeInput);
-
-        return dateToBeChecked.matches() && timeToBeChecked.matches();
+        Matcher timeToBeChecked = timeFormat.matcher(timeToCheck);
+        return timeToBeChecked.matches();
     }
 
     /**
@@ -257,12 +254,21 @@ public class Project2 {
                 "A single phone record consists of the phone number of the caller, the\n" +
                 "phone number that was called, the time at which the call began, and\n" +
                 "the time at which the call ended.\n\n" +
+
                 "Updates\n" +
                 "-------\n" +
                 "v2.0\t\tThe program now allows the user to save their phone bill\n" +
                 "\t\tto an external text file (both new and existing). Users may\n" +
                 "\t\talso load phone bill records from existing files. Each file\n" +
                 "\t\tcorrelates to a single user and their phone call(s).\n\n" +
+                "v3.0\t\tThe newest feature that has been added is the option to have\n" +
+                "\t\tthe phone bill be printed out in a more user-friendly format, to\n" +
+                "\t\teither a separate text file or to standard out, complete with the\n" +
+                "\t\tduration of each phone call in minutes. Phone calls within the phone\n" +
+                "\t\tbills are now listed chronologically by their beginning time, with the\n" +
+                "\t\tphone numbers serving as tie-breakers in appropriate cases. In addition,\n" +
+                "\t\ttime stamps are no longer recorded in 24-hour time.\n\n" +
+
                 "Commands\n" +
                 "--------\n\n" +
                 "-README\t\tThe project description. Entering this option at\n" +
@@ -270,7 +276,8 @@ public class Project2 {
                 "-print\t\tA description of some phone call. Entering this\n" +
                 "\t\toption at the command line will display the\n" +
                 "\t\tdescription of the most recently added phone call.\n" +
-                "-textFile <file>\t\tWhere to read/write the phone bill\n\n" +
+                "-textFile <file>\t\tWhere to read/write the phone bill\n" +
+                "-pretty <file>\t\tWhere to pretty print the phone bill\n\n" +
                 "To add a calling event, the following arguments must be provided\n" +
                 "in the order listed below, separated by a single white space.\n\n" +
                 "<customer>\t\tPerson whose phone bill we're modelling\n" +
@@ -287,8 +294,8 @@ public class Project2 {
                 "name may be delimited by double quotes.\n" +
                 "\n" +
                 "----------------------------------------------------------\n" +
-                "CS410J PROJECT 2: STORING YOUR PHONE BILL IN A TEXT FILE\n\n" +
-                "AUTHOR: KATHLEEN TRAN\nLAST MODIFIED: 7/14/2015\n\n");
+                "CS410J PROJECT 3: PRETTY PRINTING A PHONE BILL\n\n" +
+                "AUTHOR: KATHLEEN TRAN\nLAST MODIFIED: 7/17/2015\n\n");
         System.exit(1);
     }
 }
