@@ -167,10 +167,10 @@ public class Project3 {
             System.err.println("Invalid date(s) entered");
             System.exit(1);
         } catch (IOException ex) {
-            System.err.println("Invalid and/or malformatted text file.");
+            System.err.println("Invalid and/or malformatted text file");
             System.exit(1);
         } catch (ParserException ex) {
-            System.err.println("Something went wrong whilst attempting to parse the specified file.");
+            System.err.println("Something went wrong whilst attempting to parse the specified file");
             System.exit(1);
         }
     }
