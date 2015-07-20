@@ -80,15 +80,15 @@ public class Project3 {
             TextDumper textDumper = new TextDumper();
             textDumper.setFileName(fileName);
 
+            File fileCheck = new File(fileName);
+            boolean existingFile = fileCheck.exists();
+
             PhoneBill phoneBill = null;
-            boolean noExistingBill = true;
-            if (loadPhoneBill) {
+            if (loadPhoneBill)
                 phoneBill = (PhoneBill) textParser.parse();
-                noExistingBill = false;
-            }
 
             if (args[index] != null && args[index].length() > 1) {
-                if (noExistingBill)
+                if (!existingFile)
                     phoneBill = new PhoneBill(project3.correctNameCasing(args[index]));
                 index += 1;
             } else {
