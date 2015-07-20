@@ -66,7 +66,7 @@ public class PhoneBill extends AbstractPhoneBill {
      */
     @Override
     public void addPhoneCall(AbstractPhoneCall call) {
-        this.phoneCalls.add(call);
+        this.addPhoneCall(call);
     }
 
     /**
