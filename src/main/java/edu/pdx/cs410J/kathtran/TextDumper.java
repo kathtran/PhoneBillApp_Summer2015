@@ -84,6 +84,6 @@ public class TextDumper implements PhoneBillDumper {
     }
 
     public void setFileName(String fileName) {
-        this.fileName = fileName + ".txt";
+        this.fileName = fileName;
     }
 }

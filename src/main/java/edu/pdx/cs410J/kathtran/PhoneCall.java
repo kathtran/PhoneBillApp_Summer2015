@@ -3,10 +3,9 @@ package edu.pdx.cs410J.kathtran;
 import edu.pdx.cs410J.AbstractPhoneCall;
 
 import java.text.DateFormat;
-import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import static java.text.DateFormat.SHORT;
@@ -41,6 +40,11 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
      * The time at which the call ended
      */
     private String endTime;
+
+    /**
+     * The duration, in minutes, of the phone call
+     */
+    private String callDuration;
 
     /**
      * Default constructor.
@@ -122,35 +126,19 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
     }
 
     /**
-     * Compares this object with the specified object for order.  Returns a
+     * @return the duration of the call
+     */
+    public String getCallDuration() {
+        Date start = getDateObject(startTime);
+        Date end = getDateObject(endTime);
+        
+        return this.callDuration;
+    }
+
+    /**
+     * Compares this object with the specified object for order. Returns a
      * negative integer, zero, or a positive integer as this object is less
      * than, equal to, or greater than the specified object.
-     * <p>
-     * <p>The implementor must ensure <tt>sgn(x.compareTo(y)) ==
-     * -sgn(y.compareTo(x))</tt> for all <tt>x</tt> and <tt>y</tt>.  (This
-     * implies that <tt>x.compareTo(y)</tt> must throw an exception iff
-     * <tt>y.compareTo(x)</tt> throws an exception.)
-     * <p>
-     * <p>The implementor must also ensure that the relation is transitive:
-     * <tt>(x.compareTo(y)&gt;0 &amp;&amp; y.compareTo(z)&gt;0)</tt> implies
-     * <tt>x.compareTo(z)&gt;0</tt>.
-     * <p>
-     * <p>Finally, the implementor must ensure that <tt>x.compareTo(y)==0</tt>
-     * implies that <tt>sgn(x.compareTo(z)) == sgn(y.compareTo(z))</tt>, for
-     * all <tt>z</tt>.
-     * <p>
-     * <p>It is strongly recommended, but <i>not</i> strictly required that
-     * <tt>(x.compareTo(y)==0) == (x.equals(y))</tt>.  Generally speaking, any
-     * class that implements the <tt>Comparable</tt> interface and violates
-     * this condition should clearly indicate this fact.  The recommended
-     * language is "Note: this class has a natural ordering that is
-     * inconsistent with equals."
-     * <p>
-     * <p>In the foregoing description, the notation
-     * <tt>sgn(</tt><i>expression</i><tt>)</tt> designates the mathematical
-     * <i>signum</i> function, which is defined to return one of <tt>-1</tt>,
-     * <tt>0</tt>, or <tt>1</tt> according to whether the value of
-     * <i>expression</i> is negative, zero or positive.
      *
      * @param o the object to be compared.
      * @return a negative integer, zero, or a positive integer as this object
@@ -160,28 +148,61 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
      *                              from being compared to this object.
      */
     @Override
-    public int compareTo(Object o) {
+    public int compareTo(Object o) throws NullPointerException, ClassCastException {
         PhoneCall comparison = (PhoneCall) o;
 
-        Calendar thisDate = Calendar.getInstance();
-        thisDate.setTime(this.getStartTime());
-        Calendar thatDate = Calendar.getInstance();
-        thatDate.setTime(comparison.getStartTime());
+        Date thisDate = getDateObject(this.getStartTimeString());
+        Date thatDate = getDateObject(comparison.getStartTimeString());
 
         if (thisDate.equals(thatDate)) {
-            if (this.getCaller().compareTo(comparison.getCaller()) == -1)
-                return -1;
-            else if (this.getCaller().compareTo(comparison.getCaller()) == 1)
-                return 1;
-            else {
-                System.err.println("A possible duplicate call has been recorded");
-                System.exit(1);
-            }
-        }
-        else if (thisDate.before(thatDate))
+            int numberCompareResult = comparePhoneNumbers(comparison.getCaller());
+            if (numberCompareResult == 0) {
+                return 0;
+            } else
+                return numberCompareResult;
+        } else if (thisDate.before(thatDate))
             return -1;
         else if (thisDate.after(thatDate))
             return 1;
         return 2;
+    }
+
+    /**
+     * Creates a date object of some given date and time.
+     *
+     * @param dateToGet some date and time
+     * @return a Date object of the provided date and time
+     */
+    private Date getDateObject(String dateToGet) {
+        Date date = null;
+        DateFormat parseDate = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+        try {
+            date = parseDate.parse(dateToGet);
+        } catch (ParseException ex) {
+            System.err.println("Something went wrong whilst attempting to parse the date");
+            System.exit(1);
+        }
+        return date;
+    }
+
+    /**
+     * Compares this object's caller number with the specified object's caller number.
+     * Returns a negative integer, zero, or a positive integer as this object is less
+     * than, equal to, or greater than the specified object.
+     *
+     * @param phoneNumberToBeCompared some phone number
+     * @return a negative integer, zero, or a positive integer as this object's caller
+     * number is less than, equal to, or greater than the specified object's caller number.
+     */
+    private int comparePhoneNumbers(String phoneNumberToBeCompared) {
+        int thisNumber = Integer.parseInt(this.callerNumber.replace("-", ""));
+        int thatNumber = Integer.parseInt(phoneNumberToBeCompared.replace("-", ""));
+
+        if (thisNumber < thatNumber)
+            return -1;
+        else if (thisNumber > thatNumber)
+            return 1;
+        else
+            return 0;
     }
 }

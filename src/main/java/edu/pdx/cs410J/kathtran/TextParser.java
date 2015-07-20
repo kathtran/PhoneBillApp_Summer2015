@@ -88,6 +88,11 @@ public class TextParser implements PhoneBillParser {
                     }
                     return phoneBill;
                 }
+                else {
+                    System.err.println("The file specified currently exists, but contains incompatible data. " +
+                            "Please correct the error before trying again.");
+                    System.exit(1);
+                }
             }
         } catch (IOException ex) {
             System.err.println("Something went wrong while trying to locate the specified file. " +
@@ -105,6 +110,6 @@ public class TextParser implements PhoneBillParser {
     }
 
     public void setFileName(String fileName) {
-        this.fileName = fileName + ".txt";
+        this.fileName = fileName;
     }
 }
