@@ -42,11 +42,6 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
     private String endTime;
 
     /**
-     * The duration, in minutes, of the phone call
-     */
-    private String callDuration;
-
-    /**
      * Default constructor.
      */
     public PhoneCall() {
@@ -126,13 +121,15 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
     }
 
     /**
-     * @return the duration of the call
+     * Calculate the duration of the phone call.
+     *
+     * @return the duration of the call, in minutes.
      */
-    public String getCallDuration() {
+    public long getCallDuration() {
         Date start = getDateObject(startTime);
         Date end = getDateObject(endTime);
-        
-        return this.callDuration;
+        long duration = end.getTime() - start.getTime();
+        return (duration / (60 * 1000));
     }
 
     /**
@@ -175,7 +172,7 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
      */
     private Date getDateObject(String dateToGet) {
         Date date = null;
-        DateFormat parseDate = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+        DateFormat parseDate = new SimpleDateFormat("MM/dd/yyyy hh:mm");
         try {
             date = parseDate.parse(dateToGet);
         } catch (ParseException ex) {
