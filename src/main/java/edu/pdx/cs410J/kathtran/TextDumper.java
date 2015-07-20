@@ -63,18 +63,15 @@ public class TextDumper implements PhoneBillDumper {
         File file = new File(getFileName());
         boolean fileExists = file.exists();
 
-        FileWriter fw = new FileWriter(file, true);
+        FileWriter fw = new FileWriter(file);
         BufferedWriter bw = new BufferedWriter(fw);
-        if (!fileExists)
-            bw.write("CUSTOMER:\n" + bill.getCustomer() + "\n");
-        bw.write("PHONE CALL:\n");
-        if (!phoneBill.isEmpty()) {
-            for (PhoneCall call : phoneBill) {
-                bw.write(call.getCaller() + "\n");
-                bw.write(call.getCallee() + "\n");
-                bw.write(call.getStartTimeString() + "\n");
-                bw.write(call.getEndTimeString() + "\n");
-            }
+        bw.write("CUSTOMER:\n" + bill.getCustomer() + "\n");
+        for (PhoneCall call : phoneBill) {
+            bw.write("PHONE CALL:\n");
+            bw.write(call.getCaller() + "\n");
+            bw.write(call.getCallee() + "\n");
+            bw.write(call.getStartTimeString() + "\n");
+            bw.write(call.getEndTimeString() + "\n");
         }
         bw.close();
     }

@@ -66,7 +66,7 @@ public class PhoneBill extends AbstractPhoneBill {
      */
     @Override
     public void addPhoneCall(AbstractPhoneCall call) {
-        this.addPhoneCall(call);
+        this.phoneCalls.add(call);
     }
 
     /**
@@ -81,14 +81,19 @@ public class PhoneBill extends AbstractPhoneBill {
     /**
      * Gets the call record for the most recent phone call made.
      *
-     * @param call an instance of the {@link PhoneCall} class that
-     *             contains the caller's phone number, callee's phone
-     *             number, and start and end times of the call
      * @return the call record at the end of the list
      * @throws ArrayIndexOutOfBoundsException if the index is out of range
      */
-    public Object getMostRecentPhoneCall(AbstractPhoneCall call) throws ArrayIndexOutOfBoundsException {
+    public Object getMostRecentPhoneCall() throws ArrayIndexOutOfBoundsException {
         return this.phoneCalls.get(phoneCalls.size() - 1);
+    }
+
+    /**
+     * Sorts the phone calls in the phone bill by starting time. Ties are
+     * broken by comparing the callers' phone numbers.
+     */
+    public void sortPhoneCalls() {
+        Collections.sort(this.phoneCalls);
     }
 
     public void setCustomer(String customer) {
