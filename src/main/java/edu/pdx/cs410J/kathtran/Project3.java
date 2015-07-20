@@ -81,11 +81,15 @@ public class Project3 {
             textDumper.setFileName(fileName);
 
             PhoneBill phoneBill = null;
-            if (loadPhoneBill)
+            boolean noExistingBill = true;
+            if (loadPhoneBill) {
                 phoneBill = (PhoneBill) textParser.parse();
+                noExistingBill = false;
+            }
 
             if (args[index] != null && args[index].length() > 1) {
-                phoneBill = new PhoneBill(project3.correctNameCasing(args[index]));
+                if (noExistingBill)
+                    phoneBill = new PhoneBill(project3.correctNameCasing(args[index]));
                 index += 1;
             } else {
                 System.err.println("Cannot identify the customer name. " +
@@ -143,7 +147,7 @@ public class Project3 {
             boolean fileExists = file.exists();
 
             if (printCall)
-                System.out.println(phoneBill.getMostRecentPhoneCall(phoneCall).toString());
+                System.out.println(phoneBill.getMostRecentPhoneCall().toString());
             if (loadPhoneBill) {
                 if (fileExists) {
                     if (textDumper.checkCustomerName(phoneBill.getCustomer()))

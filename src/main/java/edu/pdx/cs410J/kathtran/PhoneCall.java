@@ -159,9 +159,8 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
                 return numberCompareResult;
         } else if (thisDate.before(thatDate))
             return -1;
-        else if (thisDate.after(thatDate))
+        else
             return 1;
-        return 2;
     }
 
     /**
@@ -192,14 +191,23 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
      * number is less than, equal to, or greater than the specified object's caller number.
      */
     private int comparePhoneNumbers(String phoneNumberToBeCompared) {
-        int thisNumber = Integer.parseInt(this.callerNumber.replace("-", ""));
-        int thatNumber = Integer.parseInt(phoneNumberToBeCompared.replace("-", ""));
+        try {
+            String startNumber = this.callerNumber.replaceAll("-", "");
+            String endNumber = this.calleeNumber.replaceAll("-", "");
+            Long thisNumber = Long.parseLong(startNumber);
+            Long thatNumber = Long.parseLong(endNumber);
 
-        if (thisNumber < thatNumber)
-            return -1;
-        else if (thisNumber > thatNumber)
-            return 1;
-        else
-            return 0;
+            if (thisNumber < thatNumber)
+                return -1;
+            else if (thisNumber > thatNumber)
+                return 1;
+            else
+                return 0;
+        }
+        catch (NumberFormatException ex) {
+            System.err.println("Something went wrong whilst attempting to parse the phone numbers");
+            System.exit(1);
+        }
+        return 1;
     }
 }
