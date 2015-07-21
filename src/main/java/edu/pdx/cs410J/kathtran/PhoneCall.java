@@ -224,9 +224,17 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
         boolean displayOneDate = false;
         if (getJustDate(this.startTime).equals(getJustDate(this.endTime)))
             displayOneDate = true;
-        if (getJustDate(this.startTime).length() == 8) {
-            if (displayOneDate)
+        if (displayOneDate) {
+            if (getJustDate(this.startTime).length() == 8)
                 return "\n" + getJustDate(this.startTime) + "\t\t" +
+                        this.callerNumber + "\t\t" + this.calleeNumber + "\t\t" + getJustTime(this.startTime) +
+                        "\t\t\t" + getJustTime(this.endTime) + "\t\t\t" + getCallDuration() + "\n";
+            else if (getJustDate(this.startTime).length() == 7)
+                return "\n" + getJustDate(this.startTime) + "\t\t\t" +
+                        this.callerNumber + "\t\t" + this.calleeNumber + "\t\t" + getJustTime(this.startTime) +
+                        "\t\t\t" + getJustTime(this.endTime) + "\t\t\t\t" + getCallDuration() + "\n";
+            else if (getJustDate(this.startTime).length() == 6)
+                return "\n" + getJustDate(this.startTime) + "\t\t\t" +
                         this.callerNumber + "\t\t" + this.calleeNumber + "\t\t" + getJustTime(this.startTime) +
                         "\t\t\t" + getJustTime(this.endTime) + "\t\t\t" + getCallDuration() + "\n";
             else
@@ -234,17 +242,11 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
                         "\n" + this.callerNumber + "\t\t" + this.calleeNumber + "\t\t" + getJustTime(this.startTime) +
                         "\t\t\t" + getJustTime(this.endTime) + "\t\t\t" + getCallDuration() + "\n" +
                         getJustDate(this.endTime) + "\n";
-        } else {
-            if (displayOneDate)
-                return "\n" + getJustDate(this.startTime) + "\t\t\t" +
-                        this.callerNumber + "\t\t" + this.calleeNumber + "\t\t" + getJustTime(this.startTime) +
-                        "\t\t\t\t" + getJustTime(this.endTime) + "\t\t\t\t" + getCallDuration() + "\n";
-            else
-                return "\n" + getJustDate(this.startTime) + "\t\t\t" +
-                        this.callerNumber + "\t\t" + this.calleeNumber + "\t\t" + getJustTime(this.startTime) +
-                        "\t\t\t\t" + getJustTime(this.endTime) + "\t\t\t\t" + getCallDuration() + "\n" +
-                        getJustDate(this.endTime) + "\n";
-        }
+        } else
+            return "\n" + getJustDate(this.startTime) + "\t\t\t" +
+                    this.callerNumber + "\t\t" + this.calleeNumber + "\t\t" + getJustTime(this.startTime) +
+                    "\t\t\t\t" + getJustTime(this.endTime) + "\t\t\t\t" + getCallDuration() + "\n" +
+                    getJustDate(this.endTime) + "\n";
     }
 
     /**

@@ -46,46 +46,27 @@ public class Project3 {
                     project3.readme();
             }
 
-            boolean printCall = false;
-            boolean loadPhoneBill = false;
-            boolean prettyPrintToFile = false;
-            boolean prettyPrintToStdOut = false;
+            boolean printCall = false;                  // Markers used to check
+            boolean loadPhoneBill = false;              // for the presence of
+            boolean prettyPrintToFile = false;          // each option in the
+            boolean prettyPrintToStdOut = false;        // arguments provided
             String fileName = null;
             String prettyFile = null;
             int index = 0;
-            for (String arg : args) {
-                if (arg.startsWith("-")) {
-                    if (arg.equals("-print")) {
-                        printCall = true;
-                        index += 1;
-                    }
-                    if (!arg.equals("-print") && !arg.equals("-textFile") &&
-                            !arg.equals("-pretty") && !arg.equals("-")) {
-                        System.err.println("Unknown command line option");
-                        System.exit(1);
-                    }
-                }
-            }
-
             for (int i = 0; i < args.length; ++i) {
-                if (args[i].equals("-textFile") && args[i + 1] != null) {
-                    if (args[i + 1].contains("-") || !args[i + 1].contains(".txt")) {
-                        System.err.println("Missing file name. Remember to include the `.txt` extension.");
-                        System.exit(1);
-                    }
+                if (args[i].equals("-print")) {
+                    printCall = true;
+                    index += 1;
+                } else if (args[i].equals("-textFile") && args[i + 1] != null) {
                     loadPhoneBill = true;
-                    fileName = args[i + 1];
+                    fileName = project3.correctExtension(args[i + 1]);
                     index += 2;
                 } else if (args[i].equals("-pretty") && args[i + 1] != null) {
                     if (args[i + 1].equals("-"))
                         prettyPrintToStdOut = true;
                     else {
-                        if (!args[i + 1].contains(".txt")) {
-                            System.err.println("Missing file name. Remember to include the `.txt` extension.");
-                            System.exit(1);
-                        }
                         prettyPrintToFile = true;
-                        prettyFile = args[i + 1];
+                        prettyFile = project3.correctExtension(args[i + 1]);
                     }
                     index += 2;
                 }
@@ -95,6 +76,17 @@ public class Project3 {
                 System.err.println("The same file name may not be used for two different options. " +
                         "Please rename one of them and try again.");
                 System.exit(1);
+            }
+
+            for (String arg : args) {
+                if (arg.startsWith("-") && !arg.equals("-print") &&
+                        !arg.equals("-textFile") && !arg.equals("-pretty")) {
+                    if ((fileName != null && fileName.contains("-") && !arg.equals(fileName)) ||
+                            (prettyFile != null && prettyFile.contains("-") && !arg.equals(prettyFile))) {
+                        System.err.println("Unknown command line option");
+                        System.exit(1);
+                    }
+                }
             }
 
             TextParser textParser = new TextParser();
@@ -215,6 +207,7 @@ public class Project3 {
      * the remaining letters are lower cased. Each part of the name is separated
      * by a single whitespace.
      */
+
     public String correctNameCasing(String nameInput) {
         @SuppressWarnings("all")
         String correctedName = new String();
@@ -269,6 +262,20 @@ public class Project3 {
         Pattern timeFormat = Pattern.compile("([01]?[0-9]|2[0-3]):[0-5][0-9]");
         Matcher timeToBeChecked = timeFormat.matcher(timeToCheck);
         return timeToBeChecked.matches();
+    }
+
+    /**
+     * Adds the plain text file type extension to a file name if one
+     * has not already been appended.
+     *
+     * @param fileName some name for a file
+     * @return the file name with the plain text file type extension
+     */
+    public String correctExtension(String fileName) {
+        if (fileName.contains(".txt"))
+            return fileName;
+        else
+            return fileName + ".txt";
     }
 
     /**
