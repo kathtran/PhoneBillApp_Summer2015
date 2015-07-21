@@ -217,9 +217,9 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
      * @return aesthetically pleasing phone call description
      */
     public String prettyPrint() {
-        return getJustDate(this.startTime) + "-" + getJustDate(this.endTime) + "\t\t" +
+        return getJustDate(this.startTime) + "\t\t" +
                 this.callerNumber + "\t" + this.calleeNumber + "\t" + getJustTime(this.startTime) +
-                "\t" + getJustTime(this.endTime) + "\t" + getCallDuration();
+                "\t\t\t" + getJustTime(this.endTime) + "\t\t\t" + getCallDuration() + "\n" + getJustDate(this.endTime);
     }
 
     /**
@@ -231,7 +231,7 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
     private String getJustDate(String dateToParse) {
         String[] split = dateToParse.split(" ");
         Date date = null;
-        DateFormat parseDate = new SimpleDateFormat("MM/dd/yy");
+        DateFormat parseDate = new SimpleDateFormat("MM/dd/yyyy");
         try {
             date = parseDate.parse(dateToParse);
         } catch (ParseException ex) {

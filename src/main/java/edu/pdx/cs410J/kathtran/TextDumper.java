@@ -83,4 +83,21 @@ public class TextDumper implements PhoneBillDumper {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
+
+    /**
+     * Dumps a pretty phone bill to some destination specified by the user.
+     *
+     * @param bill a phone bill for some customer that contains at least one phone call record
+     * @throws IOException if file cannot be found
+     */
+    public void prettyDumper(String fileName, AbstractPhoneBill bill) throws IOException {
+        PhoneBill phoneBill = (PhoneBill) bill;
+        File file = new File(fileName);
+        boolean fileExists = file.exists();
+
+        FileWriter fw = new FileWriter(file);
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write(phoneBill.prettyPrint());
+        bw.close();
+    }
 }
