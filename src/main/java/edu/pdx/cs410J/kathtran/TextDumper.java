@@ -11,6 +11,10 @@ import java.util.ArrayList;
  * the {@link PhoneBillDumper}. It creates a text file
  * that contains the records of a provided phone bill.
  *
+ * v3.0 UPDATE: In addition to the dump method, a pretty
+ * dumper has been implemented to output the contents of
+ * a nicely formatted phone bill into a text file.
+ *
  * @author Kathleen Tran
  * @version 3.0
  */
@@ -73,6 +77,23 @@ public class TextDumper implements PhoneBillDumper {
             bw.write(call.getStartTimeString() + "\n");
             bw.write(call.getEndTimeString() + "\n");
         }
+        bw.close();
+    }
+
+    /**
+     * Dumps a pretty phone bill to some destination specified by the user.
+     *
+     * @param bill a phone bill for some customer that contains at least one phone call record
+     * @throws IOException if file cannot be found
+     */
+    public void prettyDumper(String fileName, AbstractPhoneBill bill) throws IOException {
+        PhoneBill phoneBill = (PhoneBill) bill;
+        File file = new File(fileName);
+        boolean fileExists = file.exists();
+
+        FileWriter fw = new FileWriter(file);
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write(phoneBill.prettyPrint());
         bw.close();
     }
 

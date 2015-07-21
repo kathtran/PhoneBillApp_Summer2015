@@ -48,7 +48,10 @@ public class Project3 {
 
             boolean printCall = false;
             boolean loadPhoneBill = false;
+            boolean prettyPrintToFile = false;
+            boolean prettyPrintToStdOut = false;
             String fileName = null;
+            String prettyFile = null;
             int index = 0;
             for (String arg : args) {
                 if (arg.startsWith("-")) {
@@ -56,7 +59,8 @@ public class Project3 {
                         printCall = true;
                         index += 1;
                     }
-                    if (!arg.equals("-print") && !arg.equals("-textFile")) {
+                    if (!arg.equals("-print") && !arg.equals("-textFile") &&
+                            !arg.equals("-pretty") && !arg.equals("-")) {
                         System.err.println("Unknown command line option");
                         System.exit(1);
                     }
@@ -72,20 +76,40 @@ public class Project3 {
                     loadPhoneBill = true;
                     fileName = args[i + 1];
                     index += 2;
+                } else if (args[i].equals("-pretty") && args[i + 1] != null) {
+                    if (args[i + 1].equals("-"))
+                        prettyPrintToStdOut = true;
+                    else {
+                        prettyPrintToFile = true;
+                        prettyFile = args[i + 1];
+                    }
+                    index += 2;
+                }
+                else {
+                    System.err.println("Missing sufficient command line arguments");
+                    System.exit(1);
                 }
             }
 
+            if (fileName != null && prettyFile != null && fileName.equals(prettyFile)) {
+                System.err.println("The same file name may not be used for two different options. " +
+                        "Please rename one of them and try again.");
+                System.exit(1);
+            }
+
             TextParser textParser = new TextParser();
-            textParser.setFileName(fileName);
             TextDumper textDumper = new TextDumper();
-            textDumper.setFileName(fileName);
-
-            File fileCheckBefore = new File(fileName);
-            boolean fileExists = fileCheckBefore.exists();
-
+            boolean fileExists = false;
             PhoneBill phoneBill = null;
-            if (loadPhoneBill)
+            if (loadPhoneBill && fileName != null) {
+                textParser.setFileName(fileName);
+                textDumper.setFileName(fileName);
+
+                File fileCheckBefore = new File(fileName);
+                fileExists = fileCheckBefore.exists();
+
                 phoneBill = (PhoneBill) textParser.parse();
+            }
 
             if (args[index] != null && args[index].length() > 1) {
                 if (!fileExists)
@@ -144,12 +168,11 @@ public class Project3 {
             phoneBill.addPhoneCall(phoneCall);
             phoneBill.sortPhoneCalls();
 
-            File fileCheckAfter = new File(textDumper.getFileName());
-            fileExists = fileCheckAfter.exists();
-
             if (printCall)
                 System.out.println(phoneBill.getMostRecentPhoneCall().toString());
             if (loadPhoneBill) {
+                File fileCheckAfter = new File(textDumper.getFileName());
+                fileExists = fileCheckAfter.exists();
                 if (fileExists) {
                     if (textDumper.checkCustomerName(phoneBill.getCustomer()))
                         textDumper.dump(phoneBill);
@@ -162,6 +185,10 @@ public class Project3 {
                 } else
                     textDumper.dump(phoneBill);
             }
+            if (prettyPrintToFile)
+                textDumper.prettyDumper(prettyFile, phoneBill);
+            else if (prettyPrintToStdOut)
+                System.out.print(phoneBill.prettyPrint());
         } catch (ArrayIndexOutOfBoundsException ex) {
             System.err.println("Missing and/or malformatted command line arguments");
             System.exit(1);
@@ -262,34 +289,35 @@ public class Project3 {
 
                 "Updates\n" +
                 "-------\n" +
-                "v2.0\t\tThe program now allows the user to save their phone bill\n" +
+                "v2.0\tThe program now allows the user to save their phone bill\n" +
                 "\t\tto an external text file (both new and existing). Users may\n" +
                 "\t\talso load phone bill records from existing files. Each file\n" +
                 "\t\tcorrelates to a single user and their phone call(s).\n\n" +
-                "v3.0\t\tThe newest feature that has been added is the option to have\n" +
-                "\t\tthe phone bill be printed out in a more user-friendly format, to\n" +
-                "\t\teither a separate text file or to standard out, complete with the\n" +
-                "\t\tduration of each phone call in minutes. Phone calls within the phone\n" +
-                "\t\tbills are now listed chronologically by their beginning time, with the\n" +
-                "\t\tphone numbers serving as tie-breakers in appropriate cases. In addition,\n" +
-                "\t\ttime stamps are no longer recorded in 24-hour time.\n\n" +
+                "v3.0\tThe newest feature that has been added is the option to have\n" +
+                "\t\tthe phone bill be printed out in a more user-friendly format,\n" +
+                "\t\tto either a separate text file or to standard out, complete\n" +
+                "\t\twith the duration of each phone call in minutes. Phone calls\n" +
+                "\t\twithin the phone bills are now listed chronologically by their\n" +
+                "\t\tbeginning time, with the phone numbers serving as tie-breakers\n" +
+                "\t\tin appropriate cases. In addition, time stamps are no longer\n" +
+                "\t\trecorded in 24-hour time.\n\n" +
 
                 "Commands\n" +
                 "--------\n\n" +
-                "-README\t\tThe project description. Entering this option at\n" +
-                "\t\tthe command line will display this page.\n" +
-                "-print\t\tA description of some phone call. Entering this\n" +
-                "\t\toption at the command line will display the\n" +
-                "\t\tdescription of the most recently added phone call.\n" +
-                "-textFile <file>\t\tWhere to read/write the phone bill\n" +
-                "-pretty <file>\t\tWhere to pretty print the phone bill\n\n" +
+                "-README\t\t\t\tThe project description. Entering this option at\n" +
+                "\t\t\t\t\tthe command line will display this page.\n" +
+                "-print\t\t\t\tA description of some phone call. Entering this\n" +
+                "\t\t\t\t\toption at the command line will display the\n" +
+                "\t\t\t\t\tdescription of the most recently added phone call.\n" +
+                "-textFile <file>\tWhere to read/write the phone bill\n" +
+                "-pretty <file/->\tWhere to pretty print the phone bill\n\n" +
                 "To add a calling event, the following arguments must be provided\n" +
                 "in the order listed below, separated by a single white space.\n\n" +
-                "<customer>\t\tPerson whose phone bill we're modelling\n" +
+                "<customer>\t\t\tPerson whose phone bill we're modelling\n" +
                 "<caller number>\t\tPhone number of the caller\n" +
                 "<callee number>\t\tPhone number of the person called\n" +
                 "<start time>\t\tDate and time the call began\n" +
-                "<end time>\t\tDate and time the call ended\n\n" +
+                "<end time>\t\t\tDate and time the call ended\n\n" +
                 "If the customer name contains more than one word, it must be\n" +
                 "delimited by double quotes. Phone numbers must be of the form\n" +
                 "nnn-nnn-nnnn where n is a number 0-9. Date and time should be\n" +
@@ -300,7 +328,7 @@ public class Project3 {
                 "\n" +
                 "----------------------------------------------------------\n" +
                 "CS410J PROJECT 3: PRETTY PRINTING A PHONE BILL\n\n" +
-                "AUTHOR: KATHLEEN TRAN\nLAST MODIFIED: 7/17/2015\n\n");
+                "AUTHOR: KATHLEEN TRAN\nLAST MODIFIED: 7/21/2015\n\n");
         System.exit(1);
     }
 }
