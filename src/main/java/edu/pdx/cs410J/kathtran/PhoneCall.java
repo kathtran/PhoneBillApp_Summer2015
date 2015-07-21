@@ -5,10 +5,7 @@ import edu.pdx.cs410J.AbstractPhoneCall;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
-
-import static java.text.DateFormat.SHORT;
 
 /**
  * Implements the abstract methods that can be found within
