@@ -80,15 +80,15 @@ public class Project3 {
             TextDumper textDumper = new TextDumper();
             textDumper.setFileName(fileName);
 
-            File fileCheck = new File(fileName);
-            boolean existingFile = fileCheck.exists();
+            File fileCheckBefore = new File(fileName);
+            boolean fileExists = fileCheckBefore.exists();
 
             PhoneBill phoneBill = null;
             if (loadPhoneBill)
                 phoneBill = (PhoneBill) textParser.parse();
 
             if (args[index] != null && args[index].length() > 1) {
-                if (!existingFile)
+                if (!fileExists)
                     phoneBill = new PhoneBill(project3.correctNameCasing(args[index]));
                 index += 1;
             } else {
@@ -142,9 +142,10 @@ public class Project3 {
 
             PhoneCall phoneCall = new PhoneCall(callerNumber, calleeNumber, startTime, endTime);
             phoneBill.addPhoneCall(phoneCall);
+            phoneBill.sortPhoneCalls();
 
-            File file = new File(textDumper.getFileName());
-            boolean fileExists = file.exists();
+            File fileCheckAfter = new File(textDumper.getFileName());
+            fileExists = fileCheckAfter.exists();
 
             if (printCall)
                 System.out.println(phoneBill.getMostRecentPhoneCall().toString());
