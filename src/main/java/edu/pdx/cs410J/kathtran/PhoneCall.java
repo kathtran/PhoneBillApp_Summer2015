@@ -209,4 +209,54 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
         }
         return 1;
     }
+
+    /**
+     * Creates and returns a <code>String</code> where all of the data
+     * associated with the phone call has been nicely formatted.
+     *
+     * @return aesthetically pleasing phone call description
+     */
+    public String prettyPrint() {
+        return getJustDate(this.startTime) + "-" + getJustDate(this.endTime) + "\t\t" +
+                this.callerNumber + "\t" + this.calleeNumber + "\t" + getJustTime(this.startTime) +
+                "\t" + getJustTime(this.endTime) + "\t" + getCallDuration();
+    }
+
+    /**
+     * Get the date from some date and time.
+     *
+     * @param dateToParse some date and time
+     * @return the date segment
+     */
+    private String getJustDate(String dateToParse) {
+        String[] split = dateToParse.split(" ");
+        Date date = null;
+        DateFormat parseDate = new SimpleDateFormat("MM/dd/yy");
+        try {
+            date = parseDate.parse(dateToParse);
+        } catch (ParseException ex) {
+            System.err.println("Something went wrong whilst attempting to parse the date");
+            System.exit(1);
+        }
+        return DateFormat.getDateInstance(DateFormat.SHORT).format(date);
+    }
+
+    /**
+     * Get the time from some date and time.
+     *
+     * @param dateToParse some date and time
+     * @return the time segment
+     */
+    private String getJustTime(String dateToParse) {
+        String[] split = dateToParse.split(" ");
+        Date date = null;
+        DateFormat parseDate = new SimpleDateFormat("hh:mm");
+        try {
+            date = parseDate.parse(split[1]);
+        } catch (ParseException ex) {
+            System.err.println("Something went wrong whilst attempting to parse the time");
+            System.exit(1);
+        }
+        return DateFormat.getTimeInstance(DateFormat.SHORT).format(date);
+    }
 }

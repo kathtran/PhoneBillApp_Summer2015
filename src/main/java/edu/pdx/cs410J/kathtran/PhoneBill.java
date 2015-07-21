@@ -99,4 +99,17 @@ public class PhoneBill extends AbstractPhoneBill {
     public void setCustomer(String customer) {
         this.customer = customer;
     }
+
+    /**
+     * Prints out the phone bill and all of its call records in
+     * a user-friendly format.
+     */
+    public void prettyPrint() {
+        System.out.print("CS410J Phone Bill\n" + "=================\n" + this.getCustomer() + "\nNo. of Calls on Record: " +
+                this.phoneCalls.size() + "\n\nDate(s)\t\tCaller\tCallee\tCall Began\tCall Ended\tDuration (mins)");
+        for (Object call : getPhoneCalls()) {
+            PhoneCall phoneCall = (PhoneCall) call;
+            System.out.println(phoneCall.prettyPrint());
+        }
+    }
 }
