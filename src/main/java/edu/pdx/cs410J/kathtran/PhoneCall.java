@@ -15,7 +15,7 @@ import static java.text.DateFormat.SHORT;
  * the {@link AbstractPhoneCall}. It represents a single
  * phone call record, in which there exists a caller number,
  * callee number, start time, and end time.
- *
+ * <p>
  * v3.0 UPDATE: Various methods have been implemented to support
  * better formatted dates and times, and to pretty print the
  * details of the phone call.
@@ -221,9 +221,30 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
      * @return aesthetically pleasing phone call description
      */
     public String prettyPrint() {
-        return getJustDate(this.startTime) + "\t\t" +
-                this.callerNumber + "\t" + this.calleeNumber + "\t" + getJustTime(this.startTime) +
-                "\t\t\t" + getJustTime(this.endTime) + "\t\t\t" + getCallDuration() + "\n" + getJustDate(this.endTime);
+        boolean displayOneDate = false;
+        if (getJustDate(this.startTime).equals(getJustDate(this.endTime)))
+            displayOneDate = true;
+        if (getJustDate(this.startTime).length() == 8) {
+            if (displayOneDate)
+                return "\n" + getJustDate(this.startTime) + "\t\t" +
+                        this.callerNumber + "\t\t" + this.calleeNumber + "\t\t" + getJustTime(this.startTime) +
+                        "\t\t\t" + getJustTime(this.endTime) + "\t\t\t" + getCallDuration() + "\n";
+            else
+                return getJustDate(this.startTime) + "\t\t" +
+                        "\n" + this.callerNumber + "\t\t" + this.calleeNumber + "\t\t" + getJustTime(this.startTime) +
+                        "\t\t\t" + getJustTime(this.endTime) + "\t\t\t" + getCallDuration() + "\n" +
+                        getJustDate(this.endTime) + "\n";
+        } else {
+            if (displayOneDate)
+                return "\n" + getJustDate(this.startTime) + "\t\t\t" +
+                        this.callerNumber + "\t\t" + this.calleeNumber + "\t\t" + getJustTime(this.startTime) +
+                        "\t\t\t\t" + getJustTime(this.endTime) + "\t\t\t\t" + getCallDuration() + "\n";
+            else
+                return "\n" + getJustDate(this.startTime) + "\t\t\t" +
+                        this.callerNumber + "\t\t" + this.calleeNumber + "\t\t" + getJustTime(this.startTime) +
+                        "\t\t\t\t" + getJustTime(this.endTime) + "\t\t\t\t" + getCallDuration() + "\n" +
+                        getJustDate(this.endTime) + "\n";
+        }
     }
 
     /**
