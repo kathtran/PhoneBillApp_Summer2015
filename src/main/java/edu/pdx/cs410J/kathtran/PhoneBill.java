@@ -108,10 +108,10 @@ public class PhoneBill extends AbstractPhoneBill {
     public String prettyPrint() {
         String entireBill = "CS410J Phone Bill\n" + "=================\n" + this.getCustomer() +
                 "\nNo. of Calls on Record: " + this.phoneCalls.size() +
-                "\n\nDate(s)\t\tCaller\t\t\tCallee\t\t\tCall Began\t\tCall Ended\t\tDuration (mins)";
+                "\n\nDate(s)\t\t\tCaller\t\t\t\tCallee\t\t\t\tCall Began\t\t\tCall Ended\t\t\tDuration (mins)";
         for (Object call : getPhoneCalls()) {
             PhoneCall phoneCall = (PhoneCall) call;
-            entireBill = entireBill.concat("\n" + phoneCall.prettyPrint());
+            entireBill = entireBill.concat(phoneCall.prettyPrint());
         }
         return entireBill;
     }

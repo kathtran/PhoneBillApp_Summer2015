@@ -69,8 +69,8 @@ public class Project3 {
 
             for (int i = 0; i < args.length; ++i) {
                 if (args[i].equals("-textFile") && args[i + 1] != null) {
-                    if (args[i + 1].contains("-")) {
-                        System.err.println("Missing file name");
+                    if (args[i + 1].contains("-") || !args[i + 1].contains(".txt")) {
+                        System.err.println("Missing file name. Remember to include the `.txt` extension.");
                         System.exit(1);
                     }
                     loadPhoneBill = true;
@@ -80,14 +80,14 @@ public class Project3 {
                     if (args[i + 1].equals("-"))
                         prettyPrintToStdOut = true;
                     else {
+                        if (!args[i + 1].contains(".txt")) {
+                            System.err.println("Missing file name. Remember to include the `.txt` extension.");
+                            System.exit(1);
+                        }
                         prettyPrintToFile = true;
                         prettyFile = args[i + 1];
                     }
                     index += 2;
-                }
-                else {
-                    System.err.println("Missing sufficient command line arguments");
-                    System.exit(1);
                 }
             }
 
