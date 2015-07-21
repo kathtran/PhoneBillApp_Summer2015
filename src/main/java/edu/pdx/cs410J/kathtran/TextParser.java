@@ -75,8 +75,7 @@ public class TextParser implements PhoneBillParser {
                                     project3.isValidDateAndTime(endDate, endTime)) {
                                 phoneCall = new PhoneCall(caller, callee, starting, ending);
                                 phoneBill.addPhoneCall(phoneCall);
-                            }
-                            else {
+                            } else {
                                 System.err.println("The specified phone bill record is incorrect and/or malformatted.");
                                 System.exit(1);
                             }
@@ -87,8 +86,7 @@ public class TextParser implements PhoneBillParser {
                         }
                     }
                     return phoneBill;
-                }
-                else {
+                } else {
                     System.err.println("The file specified currently exists, but contains incompatible data. " +
                             "Please correct the error before trying again.");
                     System.exit(1);

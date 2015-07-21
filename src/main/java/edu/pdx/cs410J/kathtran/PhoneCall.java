@@ -192,10 +192,10 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
      */
     private int comparePhoneNumbers(String phoneNumberToBeCompared) {
         try {
-            String startNumber = this.callerNumber.replaceAll("-", "");
-            String endNumber = this.calleeNumber.replaceAll("-", "");
-            Long thisNumber = Long.parseLong(startNumber);
-            Long thatNumber = Long.parseLong(endNumber);
+            String thisCaller = this.callerNumber.replaceAll("-", "");
+            String thatCaller = phoneNumberToBeCompared.replaceAll("-", "");
+            Long thisNumber = Long.parseLong(thisCaller);
+            Long thatNumber = Long.parseLong(thatCaller);
 
             if (thisNumber < thatNumber)
                 return -1;
@@ -203,8 +203,7 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
                 return 1;
             else
                 return 0;
-        }
-        catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             System.err.println("Something went wrong whilst attempting to parse the phone numbers");
             System.exit(1);
         }
