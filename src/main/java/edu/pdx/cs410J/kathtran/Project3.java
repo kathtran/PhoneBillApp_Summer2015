@@ -85,6 +85,10 @@ public class Project3 {
                     }
                     index += 2;
                 }
+                else {
+                    System.err.println("Missing sufficient command line arguments");
+                    System.exit(1);
+                }
             }
 
             if (fileName != null && prettyFile != null && fileName.equals(prettyFile)) {
@@ -97,7 +101,7 @@ public class Project3 {
             TextDumper textDumper = new TextDumper();
             boolean fileExists = false;
             PhoneBill phoneBill = null;
-            if (loadPhoneBill) {
+            if (loadPhoneBill && fileName != null) {
                 textParser.setFileName(fileName);
                 textDumper.setFileName(fileName);
 

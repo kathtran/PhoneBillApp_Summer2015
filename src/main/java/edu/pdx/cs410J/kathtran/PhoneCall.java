@@ -16,6 +16,10 @@ import static java.text.DateFormat.SHORT;
  * phone call record, in which there exists a caller number,
  * callee number, start time, and end time.
  *
+ * v3.0 UPDATE: Various methods have been implemented to support
+ * better formatted dates and times, and to pretty print the
+ * details of the phone call.
+ *
  * @author Kathleen Tran
  * @version 3.0
  */
@@ -137,7 +141,7 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
      * negative integer, zero, or a positive integer as this object is less
      * than, equal to, or greater than the specified object.
      *
-     * @param o the object to be compared.
+     * @param object the object to be compared.
      * @return a negative integer, zero, or a positive integer as this object
      * is less than, equal to, or greater than the specified object.
      * @throws NullPointerException if the specified object is null
@@ -145,8 +149,8 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
      *                              from being compared to this object.
      */
     @Override
-    public int compareTo(Object o) throws NullPointerException, ClassCastException {
-        PhoneCall comparison = (PhoneCall) o;
+    public int compareTo(Object object) throws NullPointerException, ClassCastException {
+        PhoneCall comparison = (PhoneCall) object;
 
         Date thisDate = getDateObject(this.getStartTimeString());
         Date thatDate = getDateObject(comparison.getStartTimeString());
