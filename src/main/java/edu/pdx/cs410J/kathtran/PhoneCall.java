@@ -221,29 +221,25 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
         boolean displayOneDate = false;
         if (getJustDate(this.startTime).equals(getJustDate(this.endTime)))
             displayOneDate = true;
-        if (displayOneDate) {
-            if (getJustDate(this.startTime).length() == 8)
-                return "\n" + getJustDate(this.startTime) + "\t\t" +
-                        this.callerNumber + "\t\t" + this.calleeNumber + "\t\t" + getJustTime(this.startTime) +
-                        "\t\t\t" + getJustTime(this.endTime) + "\t\t\t" + getCallDuration() + "\n";
-            else if (getJustDate(this.startTime).length() == 7)
-                return "\n" + getJustDate(this.startTime) + "\t\t\t" +
-                        this.callerNumber + "\t\t" + this.calleeNumber + "\t\t" + getJustTime(this.startTime) +
-                        "\t\t\t" + getJustTime(this.endTime) + "\t\t\t\t" + getCallDuration() + "\n";
-            else if (getJustDate(this.startTime).length() == 6)
-                return "\n" + getJustDate(this.startTime) + "\t\t\t" +
-                        this.callerNumber + "\t\t" + this.calleeNumber + "\t\t" + getJustTime(this.startTime) +
-                        "\t\t\t" + getJustTime(this.endTime) + "\t\t\t" + getCallDuration() + "\n";
-            else
-                return getJustDate(this.startTime) + "\t\t" +
-                        "\n" + this.callerNumber + "\t\t" + this.calleeNumber + "\t\t" + getJustTime(this.startTime) +
-                        "\t\t\t" + getJustTime(this.endTime) + "\t\t\t" + getCallDuration() + "\n" +
-                        getJustDate(this.endTime) + "\n";
-        } else
-            return "\n" + getJustDate(this.startTime) + "\t\t\t" +
-                    this.callerNumber + "\t\t" + this.calleeNumber + "\t\t" + getJustTime(this.startTime) +
-                    "\t\t\t\t" + getJustTime(this.endTime) + "\t\t\t\t" + getCallDuration() + "\n" +
-                    getJustDate(this.endTime) + "\n";
+        String call = "\n" + getJustDate(this.startTime);
+        if (getJustDate(this.startTime).length() == 8)
+            call = call.concat("\t\t");
+        else
+            call = call.concat("\t\t\t");
+        call = call.concat(this.callerNumber + "\t\t" + this.calleeNumber + "\t\t" + getJustTime(this.startTime));
+        if (getJustTime(this.startTime).length() == 7)
+            call = call.concat("\t\t\t\t");
+        else
+            call = call.concat("\t\t\t");
+        call = call.concat(getJustTime(this.endTime));
+        if (getJustTime(this.endTime).length() == 7)
+            call = call.concat("\t\t\t\t");
+        else
+            call = call.concat("\t\t\t");
+        call = call.concat(getCallDuration() + "\n");
+        if (!displayOneDate)
+            call = call.concat(getJustDate(this.endTime) + "\n");
+        return call;
     }
 
     /**
