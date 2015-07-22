@@ -158,10 +158,10 @@ public class Project3 {
 
             PhoneCall phoneCall = new PhoneCall(callerNumber, calleeNumber, startTime, endTime);
             phoneBill.addPhoneCall(phoneCall);
-            phoneBill.sortPhoneCalls();
 
             if (printCall)
                 System.out.println(phoneBill.getMostRecentPhoneCall().toString());
+            phoneBill.sortPhoneCalls();
             if (loadPhoneBill) {
                 File fileCheckAfter = new File(textDumper.getFileName());
                 fileExists = fileCheckAfter.exists();
