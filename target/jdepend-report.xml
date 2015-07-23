@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<JDepend>
+    <Packages>
+
+        <Package name="edu.pdx.cs410J">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="edu.pdx.cs410J.kathtran">
+            <Stats>
+                <TotalClasses>3</TotalClasses>
+                <ConcreteClasses>3</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>0</Ca>
+                <Ce>5</Ce>
+                <A>0</A>
+                <I>1</I>
+                <D>0</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="PhoneBill.java">
+                    edu.pdx.cs410J.kathtran.PhoneBill
+                </Class>
+                <Class sourceFile="PhoneCall.java">
+                    edu.pdx.cs410J.kathtran.PhoneCall
+                </Class>
+                <Class sourceFile="Project1.java">
+                    edu.pdx.cs410J.kathtran.Project1
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>edu.pdx.cs410J</Package>
+                <Package>java.io</Package>
+                <Package>java.lang</Package>
+                <Package>java.util</Package>
+                <Package>java.util.regex</Package>
+            </DependsUpon>
+
+            <UsedBy>
+            </UsedBy>
+        </Package>
+
+        <Package name="java.io">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.lang">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.util">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="java.util.regex">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+    </Packages>
+
+    <Cycles>
+    </Cycles>
+</JDepend>
