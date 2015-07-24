@@ -22,11 +22,18 @@
         <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="phonebill" />
+      </profile>
+      <profile default="false" name="Annotation profile for phonebillCore" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="phonebillCore" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="phonebill" target="1.8" />
+      <module name="phonebillCore" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
