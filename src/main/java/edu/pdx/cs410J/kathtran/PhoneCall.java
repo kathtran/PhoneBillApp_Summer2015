@@ -111,7 +111,7 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
      */
     private String dateFormatter(String dateToFormat) {
         Date date = null;
-        DateFormat parseDate = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+        DateFormat parseDate = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
         try {
             date = parseDate.parse(dateToFormat);
         } catch (ParseException ex) {
@@ -172,7 +172,7 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
      */
     private Date getDateObject(String dateToGet) {
         Date date = null;
-        DateFormat parseDate = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+        DateFormat parseDate = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
         try {
             date = parseDate.parse(dateToGet);
         } catch (ParseException ex) {
@@ -270,9 +270,9 @@ class PhoneCall extends AbstractPhoneCall implements java.lang.Comparable {
     private String getJustTime(String dateToParse) {
         String[] split = dateToParse.split(" ");
         Date date = null;
-        DateFormat parseDate = new SimpleDateFormat("hh:mm");
+        DateFormat parseDate = new SimpleDateFormat("hh:mm a");
         try {
-            date = parseDate.parse(split[1]);
+            date = parseDate.parse(split[1] + " " + split[2]);
         } catch (ParseException ex) {
             System.err.println("Something went wrong whilst attempting to parse the time");
             System.exit(1);

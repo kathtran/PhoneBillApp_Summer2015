@@ -1,8 +1,0 @@
-CS410J Phone Bill
-=================
-Kathleen Tran
-No. of Calls on Record: 1
-
-Date(s)		Caller			Callee		Call Began		Call Ended		Duration (mins)
-6/14/13		111-111-0000		432-543-1444		4:32 PM		6:00 PM		1528
-6/15/13

@@ -65,7 +65,7 @@ public class TextDumper implements PhoneBillDumper {
         @SuppressWarnings("unchecked")
         ArrayList<PhoneCall> phoneBill = (ArrayList<PhoneCall>) bill.getPhoneCalls();
         File file = new File(getFileName());
-        boolean fileExists = file.exists();
+        file.getParentFile().mkdir();
 
         FileWriter fw = new FileWriter(file);
         BufferedWriter bw = new BufferedWriter(fw);

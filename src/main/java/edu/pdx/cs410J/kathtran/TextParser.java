@@ -41,9 +41,11 @@ public class TextParser implements PhoneBillParser {
         String starting;
         String startDate;
         String startTime;
+        String startMark;
         String ending;
         String endDate;
         String endTime;
+        String endMark;
         try {
             if (fileExists) {
                 FileReader fr = new FileReader(getFileName());
@@ -66,13 +68,15 @@ public class TextParser implements PhoneBillParser {
                             String[] end = ending.split(" ");
                             startDate = start[0];
                             startTime = start[1];
+                            startMark = start[2];
                             endDate = end[0];
                             endTime = end[1];
+                            endMark = end[2];
 
                             if (project3.isValidPhoneNumber(caller) &&
                                     project3.isValidPhoneNumber(callee) &&
-                                    project3.isValidDateAndTime(startDate, startTime) &&
-                                    project3.isValidDateAndTime(endDate, endTime)) {
+                                    project3.isValidDateAndTime(startDate, startTime, startMark) &&
+                                    project3.isValidDateAndTime(endDate, endTime, endMark)) {
                                 phoneCall = new PhoneCall(caller, callee, starting, ending);
                                 phoneBill.addPhoneCall(phoneCall);
                             } else {
